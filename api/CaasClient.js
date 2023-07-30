@@ -17,7 +17,19 @@ class CaasClient {
         this.webhook = webhook;    
     }
 
+    waitUntilConverted(storageid, interval = 1000) {
+        return new Promise(async (resolve, reject) => {
+            let checkInterval = setInterval(async () => {
+                let info = await this.getModelData(storageid);
+                if (info.conversionState != "PENDING") {
+                    clearInterval(checkInterval);
+                    resolve(info.conversionState);
+                }
+            }, interval);
+        });
+    }
 
+    
     async getInfo() {
         let api_arg = {accessPassword:this.accessPassword};
         let res = await fetch(this.serveraddress + '/caas_api/info', { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
