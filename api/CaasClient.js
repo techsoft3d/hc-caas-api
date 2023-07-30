@@ -1,5 +1,6 @@
 const FormData = require('form-data');
 const fetch = require('node-fetch');
+const fs = require('fs');
 
 
 
@@ -10,7 +11,7 @@ class CaasClient {
          * Creates a CaaS  Object
          * @param  {string} serveraddress - Address of CaaS User Management Server
          */
-    constructor(serveraddress, accessPassword,webhook) {      
+    constructor(serveraddress, accessPassword = null,webhook = null) {      
         this.serveraddress = serveraddress;
         this.accessPassword = accessPassword;
         this.webhook = webhook;    
@@ -91,10 +92,14 @@ class CaasClient {
         return await res.json();
     }
 
-    async getFileByType(storageid, type) {
+    async getFileByType(storageid, type, outputPath = null) {
         let api_arg = { accessPassword:this.accessPassword};
         let res = await fetch(this.serveraddress + '/caas_api/file/' + storageid + "/" + type, {headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
-        return await res.arrayBuffer();
+        let buffer = await res.arrayBuffer();
+        if (outputPath) {
+            fs.writeFileSync(outputPath, Buffer.from(buffer));
+        }
+        return buffer;
     }
 
     async deleteModel(storageid) {
