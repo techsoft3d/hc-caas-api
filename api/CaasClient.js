@@ -140,9 +140,13 @@ class CaasClient {
     };
 
 
-    async getModelData(storageid) {
+    async getModelData(storageids) {
         let api_arg = { accessPassword:this.accessPassword};
-        let res = await fetch(this.serveraddress + '/caas_api/data' + "/" + storageid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+
+        if (storageids instanceof Array) {
+            api_arg.itemids = storageids;
+        }
+        let res = await fetch(this.serveraddress + '/caas_api/data' +  "/" + (api_arg.storageids ? "" : storageids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
         return await res.json();
     };
 
