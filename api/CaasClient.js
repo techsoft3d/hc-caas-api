@@ -105,13 +105,18 @@ class CaasClient {
     }
 
     async getFileByType(storageid, type, outputPath = null) {
-        let api_arg = { accessPassword:this.accessPassword};
-        let res = await fetch(this.serveraddress + '/caas_api/file/' + storageid + "/" + type, {headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
-        let buffer = await res.arrayBuffer();
-        if (outputPath) {
-            fs.writeFileSync(outputPath, Buffer.from(buffer));
+        let api_arg = { accessPassword: this.accessPassword };
+        let res = await fetch(this.serveraddress + '/caas_api/file/' + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+        if (res.status == 404) {
+            return { ERROR: "File not found" };
         }
-        return buffer;
+        else {
+            let buffer = await res.arrayBuffer();
+            if (outputPath) {
+                fs.writeFileSync(outputPath, Buffer.from(buffer));
+            }
+            return {arrayBuffer: buffer};
+        }
     }
 
     async deleteModel(storageid) {

@@ -1,8 +1,5 @@
 const express = require('express');
-const fetch = require('node-fetch');
-
 const caasClient = require('./api/CaasClient');
-
 const app = express();
 
 (async () => {
@@ -13,15 +10,11 @@ const app = express();
     await myCaas.uploadModelFromFile("./testfiles/axe.CATPart");
     app.use(express.json());
 
-
     app.post('/webhook', async (req, res) => {
-        await myCaas.getFileByType(req.body.id, "scs", "./output/" + req.body.name + ".scs");
-        console.log(req.body.id);
-        console.log(req.body.files);
+        console.log("Received webhook for " + req.body.name + ".scs") 
+        await myCaas.getFileByType(req.body.id, "scs", "./output/" + req.body.name + ".scs");      
         res.sendStatus(200);
     });
-
+    
     app.listen(3000);
-
-    console.log('Server started on port 3000');
 })();
