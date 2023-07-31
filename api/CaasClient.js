@@ -11,9 +11,10 @@ class CaasClient {
          * Creates a CaaS  Object
          * @param  {string} serveraddress - Address of CaaS User Management Server
          */
-    constructor(serveraddress, accessPassword = null,webhook = null) {      
+    constructor(serveraddress, accessPassword = null,accessKey = null,webhook = null) {      
         this.serveraddress = serveraddress;
         this.accessPassword = accessPassword;
+        this.accessKey = accessKey;
         this.webhook = webhook;    
     }
 
@@ -31,7 +32,7 @@ class CaasClient {
 
     
     async getInfo() {
-        let api_arg = {accessPassword:this.accessPassword};
+        let api_arg = {accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/info', { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
         return await res.json();
     }
@@ -40,7 +41,7 @@ class CaasClient {
     async uploadModelFromFile(pathtofile, startpath = "") {
         let form = new FormData();
         form.append('file', fs.createReadStream(pathtofile));    
-        let api_arg  = {webhook: this.webhook, startPath:startpath, accessPassword:this.accessPassword};            
+        let api_arg  = {webhook: this.webhook, startPath:startpath, accessPassword:this.accessPassword,accessKey:this.accessKey};            
         let res = await fetch(this.serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
         return await res.json();;
     }
@@ -55,13 +56,13 @@ class CaasClient {
             size += stats.size;        
         }
 
-        let api_arg  = {webhook: this.webhook, rootFile:startmodel, accessPassword:this.accessPassword};            
+        let api_arg  = {webhook: this.webhook, rootFile:startmodel, accessPassword:this.accessPassword,accessKey:this.accessKey};            
         let res = await fetch(this.serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
         return await res.json();;
     }
 
     async getUploadToken(modelname, storageid = null) {
-        let api_arg = { webhook: this.webhook,accessPassword:this.accessPassword, storageid: storageid};
+        let api_arg = { webhook: this.webhook,accessPassword:this.accessPassword,accessKey:this.accessKey, storageid: storageid};
     
         let res;
         try {
@@ -74,7 +75,7 @@ class CaasClient {
     }
 
     async getDownloadToken(storageid, type) {
-        let api_arg = { accessPassword:this.accessPassword};
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
     
         let res;
         try {
@@ -87,25 +88,25 @@ class CaasClient {
     }
 
     async createEmptyModel(modelname, startpath ="", storageid = null) {
-        let api_arg = { itemname: modelname,webhook: this.webhook, startPath:startpath, accessPassword:this.accessPassword};
+        let api_arg = { itemname: modelname,webhook: this.webhook, startPath:startpath, accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/create', {method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
         return await res.json();
     }
 
     async reconvertModel(storageid, multiconvert) {
-        let api_arg  = {startPath:startpath, multiConvert:multiconvert,accessPassword:this.accessPassword};
+        let api_arg  = {startPath:startpath, multiConvert:multiconvert,accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/reconvert/' + storageid, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
         return await res.json();
     }
 
     async createCustomImage(storageid, customImageCode) {
-        let api_arg = { accessPassword:this.accessPassword, customImageCode: customImageCode };
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey, customImageCode: customImageCode };
         let res = await fetch(this.serveraddress + '/caas_api/customImage/' + storageid, { method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
         return await res.json();
     }
 
     async getFileByType(storageid, type, outputPath = null) {
-        let api_arg = { accessPassword: this.accessPassword };
+        let api_arg = { accessPassword: this.accessPassword,accessKey:this.accessKey };
         let res = await fetch(this.serveraddress + '/caas_api/file/' + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
         if (res.status == 404) {
             return { ERROR: "File not found" };
@@ -120,38 +121,45 @@ class CaasClient {
     }
 
     async deleteModel(storageid) {
-        let api_arg = { accessPassword:this.accessPassword};
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/delete/' + storageid, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) }});
         return await res.json();
     }
     
 
     async getStreamingSession(geo, renderType = null) {
-        let api_arg = { accessPassword:this.accessPassword,geo:geo, renderType: renderType };
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey,geo:geo, renderType: renderType };
         let res = await fetch(this.serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
         return await res.json();
     };
 
 
     async enableStreamAccess(streamingSessionId,storageids) {
-        let api_arg = { accessPassword:this.accessPassword};
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/enableStreamAccess/' + streamingSessionId,{ method: 'put',headers:{'CS-API-Arg': JSON.stringify(api_arg),'items':JSON.stringify(storageids)}});
         return await res.json();
     };
 
 
+    async getModels() {
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
+        let res = await fetch(this.serveraddress + '/caas_api/items',{ headers:{'CS-API-Arg': JSON.stringify(api_arg)}});
+        return await res.json();
+    };
+
+
     async getModelData(storageids) {
-        let api_arg = { accessPassword:this.accessPassword};
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
 
         if (storageids instanceof Array) {
-            api_arg.itemids = storageids;
+            api_arg.itemids = storageids;            
         }
         let res = await fetch(this.serveraddress + '/caas_api/data' +  "/" + (api_arg.storageids ? "" : storageids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
         return await res.json();
     };
 
     async getStatus(json) {
-        let api_arg = { accessPassword:this.accessPassword};
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
         let res = await fetch(this.serveraddress + '/caas_api/status' + (json ? '/true' : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
         return await res.json();
     }
