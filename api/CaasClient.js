@@ -163,6 +163,30 @@ class CaasClient {
         let res = await fetch(this.serveraddress + '/caas_api/status' + (json ? '/true' : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
         return await res.json();
     }
+
+
+    async generateAPIKey(email,password) {
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
+        let res = await fetch(this.serveraddress + '/caas_api/generateAPIKey/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+        return await res.json();
+    }
+
+    async addUser(firstName, lastName, email,password) {
+
+        let fbody = JSON.stringify({'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
+        'password': password});
+        let api_arg = { accessPassword:this.accessPassword,accessKey:this.accessKey};
+
+        let res = await fetch(this.serveraddress + '/caas_api/addUser', {  body: fbody, mode:'cors', method: 'POST',
+            headers: {
+                'CS-API-Arg': JSON.stringify(api_arg),
+                "Content-type": "application/json; charset=UTF-8"
+            } });
+
+        return await res.json();
+    }
 }
 
 
