@@ -2,12 +2,12 @@ const FormData = require('form-data');
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-let serveraddress, accessPassword = null, accessKey = null, webhook = null;
+let serveraddress, accessPassword = "", accessKey = null, webhook = null;
 
 function init(serveraddress_in, config = null) {
   serveraddress = serveraddress_in;
   if (config) {
-    accessPassword = config.accessPassword;
+    accessPassword = config.accessPassword ? config.accessPassword : "";
     accessKey = config.accessKey;
     webhook = config.webhook;
   }
@@ -51,7 +51,8 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "") {
 
   let api_arg  = {webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();;
+  let json =  await res.json();
+  return {totalsize:size, data:json};
 }
 
 async function getUploadToken(modelname, storageid = null) {
@@ -64,7 +65,7 @@ async function getUploadToken(modelname, storageid = null) {
     console.log(error);
     return { error: "Conversion Service can't be reached" };
   }
-  return await res.json();;
+  return await res.json();
 }
 
 async function getDownloadToken(storageid, type) {
@@ -80,14 +81,23 @@ async function getDownloadToken(storageid, type) {
   return await res.json();
 }
 
-async function createEmptyModel(modelname, startpath ="", storageid = null) {
-  let api_arg = { itemname: modelname, webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};
+async function createEmptyModel(modelname, config_in = null) {
+  let config = config_in ? config_in : {};
+
+  let api_arg = { itemname: modelname, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey,
+    startPath:config.startPath, processShattered:config.processShattered, conversionCommandLine: config.conversionCommandLine, skipConversion: config.skipConversion
+  };
   let res = await fetch(serveraddress + '/caas_api/create', {method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
 
-async function reconvertModel(storageid, multiconvert) {
-  let api_arg  = {startPath:startpath, multiConvert:multiconvert, accessPassword:accessPassword, accessKey:accessKey};
+async function reconvertModel(storageid, config_in) {
+  let config = config_in ? config_in : {};
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,
+    startPath:config.startPath, multiConvert:config.multiConvert, conversionCommandLine:config.conversionCommandLine, processShattered:config.processShattered,
+     overrideItem:config.overrideItem, waitUntilConversionDone: config.waitUntilConversionDone};
+
   let res = await fetch(serveraddress + '/caas_api/reconvert/' + storageid, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
