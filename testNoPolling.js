@@ -4,15 +4,15 @@ const app = express();
 
 (async () => {
 
-    let myCaas = new caasClient('http://localhost:3001', null, "http://localhost:3000/webhook");
+    caasClient.init('http://localhost:3001', null,null,"http://localhost:3000/webhook");
 
-    await myCaas.uploadModelFromFile("./testfiles/bnc.hsf");
-    await myCaas.uploadModelFromFile("./testfiles/axe.CATPart");
+    await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
+    await caasClient.uploadModelFromFile("./testfiles/axe.CATPart");
     app.use(express.json());
 
     app.post('/webhook', async (req, res) => {
         console.log("Received webhook for " + req.body.name + ".scs") 
-        await myCaas.getFileByType(req.body.id, "scs", "./output/" + req.body.name + ".scs");      
+        await caasClient.getFileByType(req.body.id, "scs", "./output/" + req.body.name + ".scs");      
         res.sendStatus(200);
     });
     
