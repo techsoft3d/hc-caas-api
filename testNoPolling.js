@@ -4,7 +4,7 @@ const app = express();
 
 (async () => {
 
-    caasClient.init('http://localhost:3001', null,null,"http://localhost:3000/webhook");
+    caasClient.init('http://localhost:3001', {webhook:'http://localhost:3000/webhook'});
 
     await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
     await caasClient.uploadModelFromFile("./testfiles/axe.CATPart");

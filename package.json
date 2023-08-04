@@ -1,6 +1,6 @@
 {
   "name": "ts3d.hc.caas.api",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "main": "./api/CaasClient.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Guido Hoffmann",
   "license": "",
   "devDependencies": {
-    "nodemon": "^1.18.3",
+    "nodemon": "^3.0.1",
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {

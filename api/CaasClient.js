@@ -2,13 +2,15 @@ const FormData = require('form-data');
 const fetch = require('node-fetch');
 const fs = require('fs');
 
-let serveraddress, accessPassword, accessKey, webhook;
+let serveraddress, accessPassword = null, accessKey = null, webhook = null;
 
-function init(server, password = null, key = null, hook = null) {
-  serveraddress = server;
-  accessPassword = password;
-  accessKey = key;
-  webhook = hook;
+function init(serveraddress_in, config = null) {
+  serveraddress = serveraddress_in;
+  if (config) {
+    accessPassword = config.accessPassword;
+    accessKey = config.accessKey;
+    webhook = config.webhook;
+  }
 }
 
 async function waitUntilConverted(storageid, interval = 1000) {
