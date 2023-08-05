@@ -61,9 +61,9 @@ async function getUploadToken(modelname, storageid = null) {
   let res;
   try {
     res = await fetch(serveraddress + '/caas_api/uploadToken' + "/" + modelname, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
-  } catch (error) {
-    console.log(error);
-    return { error: "Conversion Service can't be reached" };
+  } catch (ERROR) {
+    console.log(ERROR);
+    return { ERROR: "Conversion Service can't be reached" };
   }
   return await res.json();
 }
@@ -74,9 +74,9 @@ async function getDownloadToken(storageid, type) {
   let res;
   try {
     res = await fetch(serveraddress + '/caas_api/downloadToken' + "/" + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
-  } catch (error) {
-    console.log(error);
-    return { error: "Conversion Service can't be reached" };
+  } catch (ERROR) {
+    console.log(ERROR);
+    return { ERROR: "Conversion Service can't be reached" };
   }
   return await res.json();
 }
@@ -102,8 +102,9 @@ async function reconvertModel(storageid, config_in) {
   return await res.json();
 }
 
-async function createCustomImage(storageid, customImageCode) {
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey, customImageCode: customImageCode };
+async function createCustomImage(storageid, config_in) {
+  let config = config_in ? config_in : {};
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey, customImageCode: config.customImageCode,conversionCommandLine : config.conversionCommandLine};
   let res = await fetch(serveraddress + '/caas_api/customImage/' + storageid, { method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
@@ -111,6 +112,21 @@ async function createCustomImage(storageid, customImageCode) {
 async function getFileByType(storageid, type, outputPath = null) {
   let api_arg = { accessPassword: accessPassword, accessKey:accessKey };
   let res = await fetch(serveraddress + '/caas_api/file/' + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  if (res.status == 404) {
+    return { ERROR: "File not found" };
+  }
+  else {
+    let buffer = await res.arrayBuffer();
+    if (outputPath) {
+      fs.writeFileSync(outputPath, Buffer.from(buffer));
+    }
+    return {arrayBuffer: buffer};
+  }
+}
+
+async function getFileByName(storageid, name, outputPath = null) {
+  let api_arg = { accessPassword: accessPassword, accessKey:accessKey };
+  let res = await fetch(serveraddress + '/caas_api/fileByName/' + storageid + "/" + name, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   if (res.status == 404) {
     return { ERROR: "File not found" };
   }
@@ -153,8 +169,12 @@ async function getModelData(storageids) {
   if (storageids instanceof Array) {
     api_arg.itemids = storageids;            
   }
-  let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.storageids ? "" : storageids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();
+  try {
+    let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.itemids ? "" : storageids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+    return await res.json();
+  } catch (ERROR) {
+    return { ERROR: "Conversion Service can't be reached" };
+  }
 };
 
 async function getStatus(json) {
@@ -198,6 +218,7 @@ module.exports = {
   reconvertModel,
   createCustomImage,
   getFileByType,
+  getFileByName,
   deleteModel,
   getStreamingSession,
   enableStreamAccess,
