@@ -120,7 +120,7 @@ async function getFileByType(storageid, type, outputPath = null) {
     if (outputPath) {
       fs.writeFileSync(outputPath, Buffer.from(buffer));
     }
-    return {arrayBuffer: buffer};
+    return buffer;
   }
 }
 
@@ -135,7 +135,7 @@ async function getFileByName(storageid, name, outputPath = null) {
     if (outputPath) {
       fs.writeFileSync(outputPath, Buffer.from(buffer));
     }
-    return {arrayBuffer: buffer};
+    return buffer
   }
 }
 
