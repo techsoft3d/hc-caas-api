@@ -189,6 +189,13 @@ async function generateAPIKey(email,password) {
   return await res.json();
 }
 
+
+async function checkPassword(email,password) {
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
+  let res = await fetch(serveraddress + '/caas_api/checkPassword/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
 async function addUser(firstName, lastName, email,password) {
 
   let fbody = JSON.stringify({'firstName': firstName,
