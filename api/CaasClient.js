@@ -204,7 +204,7 @@ async function getUserInfo(email,password) {
   return await res.json();
 }
 
-async function addUser(email,password = undefined,firstName = undefined, lastName = undefined,organizationID = undefined) {
+async function addUser(email,ownerEmail = undefined, ownerPassword = undefined,password = undefined,firstName = undefined, lastName = undefined,organizationID = undefined) {
 
   let fbody = JSON.stringify({
     'firstName': firstName,
@@ -214,7 +214,7 @@ async function addUser(email,password = undefined,firstName = undefined, lastNam
     'organizationID': organizationID
   });
 
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
   let res = await fetch(serveraddress + '/caas_api/addUser', {  body: fbody, mode:'cors', method: 'POST',
       headers: {
