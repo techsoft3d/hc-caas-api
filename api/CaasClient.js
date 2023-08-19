@@ -196,12 +196,16 @@ async function checkPassword(email,password) {
   return await res.json();
 }
 
-async function addUser(firstName, lastName, email,password) {
+async function addUser(firstName, lastName, email,password,organizationID = undefined) {
 
-  let fbody = JSON.stringify({'firstName': firstName,
-  'lastName': lastName,
-  'email': email,
-  'password': password});
+  let fbody = JSON.stringify({
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email,
+    'password': password,
+    'organizationID': organizationID
+  });
+
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
 
   let res = await fetch(serveraddress + '/caas_api/addUser', {  body: fbody, mode:'cors', method: 'POST',
@@ -233,5 +237,6 @@ module.exports = {
   getModelData,
   getStatus,
   generateAPIKey,
-  addUser
+  addUser,
+  checkPassword
 };
