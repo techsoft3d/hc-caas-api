@@ -254,6 +254,21 @@ async function addUser(email,role = 1,ownerEmail = undefined, ownerPassword = un
   return await res.json();
 }
 
+
+
+async function removeUser(email,organizationID,ownerEmail = undefined, ownerPassword = undefined) {
+
+ 
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/removeUser' + "/" + email + "/" + organizationID, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -280,5 +295,6 @@ module.exports = {
   changeOrgName,
   retrieveInvite,
   acceptInvite,
-  getUsers
+  getUsers,
+  removeUser
 };
