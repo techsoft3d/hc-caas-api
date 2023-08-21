@@ -213,6 +213,12 @@ async function changeOrgName(email,password, orgid,orgname) {
 
 
 
+async function getUsers(email,password, orgid) {
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
+  let res = await fetch(serveraddress + '/caas_api/getUsers/' + email + "/" + password + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
 async function retrieveInvite(inviteid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
   let res = await fetch(serveraddress + '/caas_api/retrieveInvite/' + inviteid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -226,14 +232,15 @@ async function acceptInvite(inviteid,password) {
 }
 
 
-async function addUser(email,ownerEmail = undefined, ownerPassword = undefined,password = undefined,firstName = undefined, lastName = undefined,organizationID = undefined) {
+async function addUser(email,role = 1,ownerEmail = undefined, ownerPassword = undefined,password = undefined,firstName = undefined, lastName = undefined,organizationID = undefined) {
 
   let fbody = JSON.stringify({
     'firstName': firstName,
     'lastName': lastName,
     'email': email,
     'password': password,
-    'organizationID': organizationID
+    'organizationID': organizationID,
+    'role': role
   });
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
@@ -272,5 +279,6 @@ module.exports = {
   getUserInfo,
   changeOrgName,
   retrieveInvite,
-  acceptInvite
+  acceptInvite,
+  getUsers
 };
