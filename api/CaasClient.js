@@ -255,6 +255,29 @@ async function addUser(email,role = 1,ownerEmail = undefined, ownerPassword = un
 }
 
 
+async function updateUser(email,role = undefined,ownerEmail = undefined, ownerPassword = undefined,password = undefined,firstName = undefined, lastName = undefined,organizationID = undefined) {
+
+  let fbody = JSON.stringify({
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email,
+    'password': password,
+    'organizationID': organizationID,
+    'role': role
+  });
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/updateUser', {  body: fbody, mode:'cors', method: 'POST',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),
+          "Content-type": "application/json; charset=UTF-8"
+      } });
+
+  return await res.json();
+}
+
+
 
 async function removeUser(email,organizationID,ownerEmail = undefined, ownerPassword = undefined) {
 
@@ -296,5 +319,6 @@ module.exports = {
   retrieveInvite,
   acceptInvite,
   getUsers,
-  removeUser
+  removeUser,
+  updateUser
 };
