@@ -345,6 +345,20 @@ async function switchOrganization(orgid, ownerEmail, ownerPassword) {
   return await res.json();
 }
 
+
+
+async function getAPIKeys(ownerEmail, ownerPassword) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/getAPIKeys', {  mode:'cors', 
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -377,5 +391,6 @@ module.exports = {
   addOrganization,
   getOrganizations,
   getOrganization,
-  switchOrganization
+  switchOrganization,
+  getAPIKeys
 };
