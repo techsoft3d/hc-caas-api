@@ -359,6 +359,34 @@ async function getAPIKeys(ownerEmail, ownerPassword) {
   return await res.json();
 }
 
+
+async function invalidateAPIKey(key, ownerEmail, ownerPassword) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/invalidateAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+async function editAPIKey(key,name, ownerEmail, ownerPassword) {
+
+  let api_arg = { name: name,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/editAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -392,5 +420,7 @@ module.exports = {
   getOrganizations,
   getOrganization,
   switchOrganization,
-  getAPIKeys
+  getAPIKeys,
+  invalidateAPIKey,
+  editAPIKey
 };
