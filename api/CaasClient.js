@@ -281,10 +281,63 @@ async function updateUser(email,role = undefined,ownerEmail = undefined, ownerPa
 
 async function removeUser(email,organizationID,ownerEmail = undefined, ownerPassword = undefined) {
 
- 
+
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
   let res = await fetch(serveraddress + '/caas_api/removeUser' + "/" + email + "/" + organizationID, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+async function addOrganization(organizationname,ownerEmail, ownerPassword) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/addOrganization' + "/" + organizationname, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+
+async function getOrganizations(ownerEmail, ownerPassword, getAll = false) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/getOrganizations' + (getAll ? ("/" + getAll) : ""), {  mode:'cors', 
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+async function getOrganization(orgid, ownerEmail, ownerPassword) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/getOrganization' + "/" + orgid, {  mode:'cors', 
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
+async function switchOrganization(orgid, ownerEmail, ownerPassword) {
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/switchOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -320,5 +373,9 @@ module.exports = {
   acceptInvite,
   getUsers,
   removeUser,
-  updateUser
+  updateUser,
+  addOrganization,
+  getOrganizations,
+  getOrganization,
+  switchOrganization
 };
