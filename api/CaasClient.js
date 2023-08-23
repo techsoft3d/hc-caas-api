@@ -183,13 +183,6 @@ async function getStatus(json) {
   return await res.json();
 }
 
-async function generateAPIKey(email,password) {
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/generateAPIKey/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
-  return await res.json();
-}
-
-
 async function checkPassword(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
   let res = await fetch(serveraddress + '/caas_api/checkPassword/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -277,8 +270,6 @@ async function updateUser(email,role = undefined,ownerEmail = undefined, ownerPa
   return await res.json();
 }
 
-
-
 async function removeUser(email,organizationID,ownerEmail = undefined, ownerPassword = undefined) {
 
 
@@ -291,7 +282,6 @@ async function removeUser(email,organizationID,ownerEmail = undefined, ownerPass
 
   return await res.json();
 }
-
 
 async function addOrganization(organizationname,ownerEmail, ownerPassword) {
 
@@ -382,6 +372,12 @@ async function editAPIKey(key,name, ownerEmail, ownerPassword) {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
 
+  return await res.json();
+}
+
+async function generateAPIKey(name, ownerEmail, ownerPassword) {
+  let api_arg = { name: name,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/generateAPIKey',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
