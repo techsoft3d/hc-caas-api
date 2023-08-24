@@ -383,6 +383,14 @@ async function generateAPIKey(name, ownerEmail, ownerPassword) {
 
 
 
+async function updateOrgTokens(orgid,tokens, ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/updateOrgTokens' + "/" + orgid + "/" + tokens,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -418,5 +426,6 @@ module.exports = {
   switchOrganization,
   getAPIKeys,
   invalidateAPIKey,
-  editAPIKey
+  editAPIKey,
+  updateOrgTokens
 };
