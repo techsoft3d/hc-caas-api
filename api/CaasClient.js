@@ -400,6 +400,15 @@ async function getStatsByMonth(orgid,month,year, ownerEmail, ownerPassword) {
 
 
 
+async function injectStats(orgid,stats, ownerEmail, ownerPassword) {
+  let api_arg = {stats: stats,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/injectStats' + "/" + orgid ,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
+
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -437,5 +446,6 @@ module.exports = {
   invalidateAPIKey,
   editAPIKey,
   updateOrgTokens,
-  getStatsByMonth
+  getStatsByMonth,
+  injectStats
 };
