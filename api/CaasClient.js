@@ -31,15 +31,15 @@ async function getInfo() {
   return await res.json();
 }
 
-async function uploadModelFromFile(pathtofile, startpath = "") {
+async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
   let form = new FormData();
   form.append('file', fs.createReadStream(pathtofile));    
-  let api_arg  = {webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
+  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   return await res.json();;
 }
 
-async function uploadModelFromFiles(pathtofiles, startmodel = "") {
+async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
   let form = new FormData();
 
   let size = 0;
@@ -49,14 +49,14 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "") {
     size += stats.size;        
   }
 
-  let api_arg  = {webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
+  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   let json =  await res.json();
   return {totalsize:size, data:json};
 }
 
-async function getUploadToken(modelname, storageid = null) {
-  let api_arg = { webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageid: storageid};
+async function getUploadToken(modelname, storageid = null, args = {}) {
+  let api_arg = { hcVersion: args.hcVersion, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageid: storageid};
 
   let res;
   try {
@@ -81,20 +81,19 @@ async function getDownloadToken(storageid, type) {
   return await res.json();
 }
 
-async function createEmptyModel(modelname, config_in = null) {
-  let config = config_in ? config_in : {};
+async function createEmptyModel(modelname, config= {}) {
+ 
 
-  let api_arg = { itemname: modelname, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey,
+  let api_arg = { hcVersion: config.hcVersion, itemname: modelname, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey,
     startPath:config.startPath, processShattered:config.processShattered, conversionCommandLine: config.conversionCommandLine, skipConversion: config.skipConversion
   };
   let res = await fetch(serveraddress + '/caas_api/create', {method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
 
-async function reconvertModel(storageid, config_in) {
-  let config = config_in ? config_in : {};
+async function reconvertModel(storageid, config = {}) {
 
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,
+  let api_arg = { hcVersion: config.hcVersion, accessPassword:accessPassword, accessKey:accessKey,
     startPath:config.startPath, multiConvert:config.multiConvert, conversionCommandLine:config.conversionCommandLine, processShattered:config.processShattered,
      overrideItem:config.overrideItem, waitUntilConversionDone: config.waitUntilConversionDone};
 
@@ -145,8 +144,8 @@ async function deleteModel(storageid) {
   return await res.json();
 }
 
-async function getStreamingSession(geo = undefined, renderType = null, accessItems = undefined) {
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey, geo:geo, renderType: renderType,accessItems:accessItems };
+async function getStreamingSession(geo = undefined, renderType = null, accessItems = undefined,hcVersion = undefined) {
+  let api_arg = { hcVersion: hcVersion, accessPassword:accessPassword, accessKey:accessKey, geo:geo, renderType: renderType,accessItems:accessItems };
   let res = await fetch(serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   return await res.json();
 };
