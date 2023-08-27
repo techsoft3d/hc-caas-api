@@ -17,6 +17,7 @@
   "dependencies": {
     "del": "^6.0.0",
     "express": "^4.16.3",
+    "filemanager-webpack-plugin": "^8.0.0",
     "form-data": "^4.0.0",
     "node-fetch": "^2.6.1"
   }

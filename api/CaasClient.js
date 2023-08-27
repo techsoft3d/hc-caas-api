@@ -145,7 +145,7 @@ async function deleteModel(storageid) {
   return await res.json();
 }
 
-async function getStreamingSession(geo, renderType = null) {
+async function getStreamingSession(geo = "", renderType = null) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey, geo:geo, renderType: renderType };
   let res = await fetch(serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   return await res.json();
@@ -177,6 +177,19 @@ async function getModelData(storageids) {
   }
 };
 
+function initializeWebViewer(data, config) {
+  if (!config) {
+    config = {};
+  }
+  let viewer = new Communicator.WebViewer({
+    containerId: config && config.containerId ? config.containerId : 'viewer',
+    endpointUri: (data.port == "443" ? 'wss://' : "ws://") + data.serverurl + ":" + data.port + '?token=' + data.sessionid,
+    model: (config.model ? config.model : "_empty"),
+    rendererType: ((data.renderType && data.renderType == "server") ? Communicator.RendererType.Server : Communicator.RendererType.Client)
+  });
+  return viewer;
+}
+
 async function getStatus(json) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
   let res = await fetch(serveraddress + '/caas_api/status' + (json ? '/true' : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -188,8 +201,6 @@ async function checkPassword(email,password) {
   let res = await fetch(serveraddress + '/caas_api/checkPassword/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
-
-
 
 async function getUserInfo(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
@@ -203,8 +214,6 @@ async function changeOrgName(email,password, orgid,orgname) {
   let res = await fetch(serveraddress + '/caas_api/changeOrgName/' + email + "/" + password + "/" + orgid + "/" + orgname,{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
-
-
 
 async function getUsers(email,password, orgid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
@@ -447,5 +456,6 @@ module.exports = {
   editAPIKey,
   updateOrgTokens,
   getStatsByMonth,
-  injectStats
+  injectStats,
+  initializeWebViewer
 };

@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/techsoft3d/hoops-web-viewer/hoops_web_viewer.js"></script>
+    <script type="text/javascript" src="caas.min.js"></script>
+    
+    <style>
+        #myContainer {
+            width: 640px;
+            height: 480px;
+            position: relative;
+        }
+    </style>
+    <div id="myContainer"></div>
+    <script type="text/javascript">
+
+        let hwv;
+        window.onload = async () => {
+            caasClient.init('https://caas.techsoft3d.com',{accessKey:""});            
+            let info= await caasClient.getInfo();
+            let sessiondata = await caasClient.getStreamingSession("America");
+            let saresult = await caasClient.enableStreamAccess(sessiondata.sessionid,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);            
+            hwv = caasClient.initializeWebViewer(sessiondata, { containerId: "myContainer",model:"bnc.hsf"});
+
+            hwv.start();
+            //! [load_scs_model]
+            //! [set_callbacks]
+            hwv.setCallbacks({
+                sceneReady: () => {
+                    console.log("HOOPS Web Viewer has been initialized.");
+                },
+            });
+            //! [set_callbacks]
+        };
+        function selectAll() {
+            //! [interact_with_viewer]
+            hwv.selectPart(1);
+            hwv.view.setProjectionMode(Communicator.Projection.Orthographic);
+            //! [interact_with_viewer]
+        }
+
+    </script>
+    <input type="button" onclick="selectAll();" style="right:5px;top:5px;position:absolute;" value="Select All">
+</head>
+
+<body>
+</body>
+
+</html>
