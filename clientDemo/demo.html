@@ -19,8 +19,8 @@
         window.onload = async () => {
             caasClient.init('https://caas.techsoft3d.com',{accessKey:""});            
             let info= await caasClient.getInfo();
-            let sessiondata = await caasClient.getStreamingSession("America");
-            let saresult = await caasClient.enableStreamAccess(sessiondata.sessionid,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);            
+            let sessiondata = await caasClient.getStreamingSession("America",null,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
+//            let saresult = await caasClient.enableStreamAccess(sessiondata.sessionid,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);            
             hwv = caasClient.initializeWebViewer(sessiondata, { containerId: "myContainer",model:"bnc.hsf"});
 
             hwv.start();
