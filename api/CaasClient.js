@@ -1,6 +1,6 @@
-// const FormData = require('form-data');
-// const fetch = require('node-fetch');
-// const fs = require('fs');
+const FormData = require('form-data');
+const fetch = require('node-fetch');
+const fs = require('fs');
 
 let serveraddress, accessPassword = "", accessKey = null, webhook = null;
 
@@ -145,7 +145,7 @@ async function deleteModel(storageid) {
   return await res.json();
 }
 
-async function getStreamingSession(geo = "", renderType = null, accessItems = undefined) {
+async function getStreamingSession(geo = undefined, renderType = null, accessItems = undefined) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey, geo:geo, renderType: renderType,accessItems:accessItems };
   let res = await fetch(serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   return await res.json();
