@@ -31,12 +31,36 @@ async function getInfo() {
   return await res.json();
 }
 
+
+async function uploadModelFromFileInput(file, startpath = "", args = {}) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+    reader.onload = (function (theFile) {
+      return async function (e) {
+        let result = await caasClient.uploadModel(theFile.name, new Blob([e.target.result]), startpath, args);
+        result.inputfilename = theFile.name;
+        resolve(result);      
+      };
+    })(file);
+    reader.readAsArrayBuffer(file);
+   });
+}
+
+
+async function uploadModel(filename,blob, startpath = "", args = {}) {
+  let form = new FormData();
+  form.append('file', blob,filename);    
+  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
+  let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+  return await res.json();
+}
+
 async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
   let form = new FormData();
   form.append('file', fs.createReadStream(pathtofile));    
   let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();;
+  return await res.json();
 }
 
 async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
@@ -421,6 +445,8 @@ module.exports = {
   init,
   waitUntilConverted,
   getInfo,
+  uploadModel,
+  uploadModelFromFileInput,
   uploadModelFromFile,
   uploadModelFromFiles,
   getUploadToken,

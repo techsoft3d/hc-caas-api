@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/techsoft3d/hoops-web-viewer/hoops_web_viewer.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="caas.min.js"></script>
+    
+    <style>
+        #myContainer {
+            width: 640px;
+            height: 480px;
+            position: relative;
+        }
+    </style>
+    <div id="myContainer"></div>
+    <script type="text/javascript">
+
+        let hwv;
+        let sessionid = null;
+        window.onload = async () => {
+            $("#uploadbutton").click(function(e){
+                e.preventDefault();
+                $("#uploadinput").trigger('click');
+             });
+
+
+            $("#uploadinput").change(async function () {
+                var files = $('#uploadinput')[0].files;
+                // Check file selected or not
+                if (files.length > 0) {
+                    $("#status").text("Uploading");
+                    let result = await caasClient.uploadModelFromFileInput(files[0]);
+                    $("#status").text("Converting");
+                    await caasClient.waitUntilConverted(result.itemid);
+                    $("#status").text("accessing");
+                    let saresult = await caasClient.enableStreamAccess(sessionid,[result.itemid]);
+                    await hwv.model.clear();
+                     hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),result.inputfilename);
+                     $("#status").text("Streaming");
+                }
+            });
+
+            caasClient.init('https://caas.techsoft3d.com', { accessKey: "" });
+            //let info = await caasClient.getInfo();
+            let sessiondata = await caasClient.getStreamingSession(null, null,null,{hcVersion:"2023-1-0"});
+            sessionid = sessiondata.sessionid;
+            hwv = caasClient.initializeWebViewer(sessiondata, { containerId: "myContainer"});
+
+            hwv.setCallbacks({
+                sceneReady: () => {
+                   $("#status").text("Scene Ready");
+                },
+            });
+            hwv.start();
+        };
+
+    </script>
+    <button id="uploadbutton">Upload</button><input style="opacity:0;" type="file" id="uploadinput"/>
+    <br>
+    <span id="status"></span>
+   
+    
+    <body>
+    </body>
+    
+    </html>
