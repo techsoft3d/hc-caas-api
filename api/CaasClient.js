@@ -413,15 +413,11 @@ async function generateAPIKey(name, ownerEmail, ownerPassword) {
   return await res.json();
 }
 
-
-
 async function updateOrgTokens(orgid,tokens, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
   let res = await fetch(serveraddress + '/caas_api/updateOrgTokens' + "/" + orgid + "/" + tokens,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
-
-
 
 async function getStatsByMonth(orgid,month,year, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
@@ -429,17 +425,17 @@ async function getStatsByMonth(orgid,month,year, ownerEmail, ownerPassword) {
   return await res.json();
 }
 
-
-
-
 async function injectStats(orgid,stats, ownerEmail, ownerPassword) {
   let api_arg = {stats: stats,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
   let res = await fetch(serveraddress + '/caas_api/injectStats' + "/" + orgid ,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
-
-
+async function updatePassword(newpassword,ownerEmail, ownerPassword) {
+  let api_arg = {newpassword: newpassword,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/updatePassword',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
 
 module.exports = {
   init,
@@ -480,6 +476,7 @@ module.exports = {
   invalidateAPIKey,
   editAPIKey,
   updateOrgTokens,
+  updatePassword,
   getStatsByMonth,
   injectStats,
   initializeWebViewer
