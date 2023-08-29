@@ -46,21 +46,22 @@ async function uploadModelFromFileInput(file, startpath = "", args = {}) {
    });
 }
 
+async function _uploadModel(formData, startpath = "", args = {}) {
+  let api_arg = { skipConversion: args.skipConversion,hcVersion: args.hcVersion, webhook: webhook, startPath: startpath, accessPassword: accessPassword, accessKey: accessKey };
+  let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: formData, headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  return await res.json();
+}
 
 async function uploadModel(filename,blob, startpath = "", args = {}) {
   let form = new FormData();
   form.append('file', blob,filename);    
-  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
-  let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();
+  return await _uploadModel(form, startpath, args);
 }
 
 async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
   let form = new FormData();
   form.append('file', fs.createReadStream(pathtofile));    
-  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, startPath:startpath, accessPassword:accessPassword, accessKey:accessKey};            
-  let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();
+  return await _uploadModel(form, startpath, args);
 }
 
 async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
@@ -73,7 +74,7 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
     size += stats.size;        
   }
 
-  let api_arg  = {hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
+  let api_arg  = {skipConversion: args.skipConversion, hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   let json =  await res.json();
   return {totalsize:size, data:json};
