@@ -13,6 +13,10 @@ function init(serveraddress_in, config = null) {
   }
 }
 
+function setAccessKey(accessKey_in) {
+  accessKey = accessKey_in;
+} 
+
 async function waitUntilConverted(storageid, interval = 1000) {
   return new Promise(async (resolve, reject) => {
     let checkInterval = setInterval(async () => {
@@ -489,5 +493,6 @@ module.exports = {
   getStatsByMonth,
   injectStats,
   initializeWebViewer,
-  getFiles
+  getFiles,
+  setAccessKey
 };
