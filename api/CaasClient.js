@@ -438,6 +438,14 @@ async function updatePassword(newpassword,ownerEmail, ownerPassword) {
   return await res.json();
 }
 
+
+async function getFiles(orgid,ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/getFiles' + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -480,5 +488,6 @@ module.exports = {
   updatePassword,
   getStatsByMonth,
   injectStats,
-  initializeWebViewer
+  initializeWebViewer,
+  getFiles
 };
