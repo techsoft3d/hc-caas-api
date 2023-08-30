@@ -450,6 +450,13 @@ async function getFiles(orgid,ownerEmail, ownerPassword) {
 }
 
 
+async function deleteAuth(orgid,itemid,ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/deleteAuth' + "/" + orgid + "/" + itemid,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -494,5 +501,6 @@ module.exports = {
   injectStats,
   initializeWebViewer,
   getFiles,
-  setAccessKey
+  setAccessKey,
+  deleteAuth
 };
