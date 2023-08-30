@@ -457,6 +457,19 @@ async function deleteAuth(orgid,itemid,ownerEmail, ownerPassword) {
 }
 
 
+async function getItemFromType(orgid,itemid,type,ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/getItemFromType' + "/" + orgid + "/" + itemid + (type ? ("/" + type) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  if (res.status == 404) {
+    return { ERROR: "File not found" };
+  }
+  else {
+    let buffer = await res.arrayBuffer();  
+    return buffer;
+  }
+}
+
+
 module.exports = {
   init,
   waitUntilConverted,
@@ -502,5 +515,6 @@ module.exports = {
   initializeWebViewer,
   getFiles,
   setAccessKey,
-  deleteAuth
+  deleteAuth,
+  getItemFromType
 };
