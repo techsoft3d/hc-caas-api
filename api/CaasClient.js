@@ -249,6 +249,13 @@ async function getUsers(email,password, orgid) {
   return await res.json();
 }
 
+
+async function getAllUsers(email,password) {
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
+  let res = await fetch(serveraddress + '/caas_api/getAllUsers/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
 async function retrieveInvite(inviteid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
   let res = await fetch(serveraddress + '/caas_api/retrieveInvite/' + inviteid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -499,6 +506,7 @@ module.exports = {
   retrieveInvite,
   acceptInvite,
   getUsers,
+  getAllUsers,
   removeUser,
   updateUser,
   addOrganization,
