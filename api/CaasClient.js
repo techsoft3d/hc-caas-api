@@ -84,12 +84,12 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
   return {totalsize:size, data:json};
 }
 
-async function getUploadToken(modelname, storageid = null, args = {}) {
-  let api_arg = { hcVersion: args.hcVersion, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageid: storageid};
+async function getUploadToken(modelname, size, args = {}) {
+  let api_arg = { hcVersion: args.hcVersion, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageid: args.storageid};
 
   let res;
   try {
-    res = await fetch(serveraddress + '/caas_api/uploadToken' + "/" + modelname, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+    res = await fetch(serveraddress + '/caas_api/uploadToken' + "/" + modelname + "/" + size, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   } catch (ERROR) {
     console.log(ERROR);
     return { ERROR: "Conversion Service can't be reached" };
