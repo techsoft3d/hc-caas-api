@@ -336,6 +336,20 @@ async function deleteUser(email,ownerEmail = undefined, ownerPassword = undefine
   return await res.json();
 }
 
+
+async function deleteOrganization(orgid,ownerEmail = undefined, ownerPassword = undefined) {
+
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/deleteOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
 async function setSuperUser(email,superuser,ownerEmail = undefined, ownerPassword = undefined) {
 
 
@@ -550,5 +564,5 @@ module.exports = {
   getItemFromType,
   setSuperUser,
   deleteUser,
-
+  deleteOrganization
 };

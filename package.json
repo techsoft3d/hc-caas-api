@@ -1,6 +1,6 @@
 {
   "name": "ts3d.hc.caas.api",
-  "version": "0.7.30",
+  "version": "0.7.31",
   "description": "",
   "main": "./api/CaasClient.js",
   "scripts": {
