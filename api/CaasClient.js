@@ -245,16 +245,11 @@ async function changeOrgName(email,password, orgid,orgname) {
 
 async function getUsers(email,password, orgid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/getUsers/' + email + "/" + password + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/getUsers/' + email + "/" + password +  (orgid ? ("/" + orgid) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
-async function getAllUsers(email,password) {
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/getAllUsers/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
-  return await res.json();
-}
 
 async function retrieveInvite(inviteid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
@@ -326,6 +321,35 @@ async function removeUser(email,organizationID,ownerEmail = undefined, ownerPass
 
   return await res.json();
 }
+
+
+async function deleteUser(email,ownerEmail = undefined, ownerPassword = undefined) {
+
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/deleteUser' + "/" + email, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+async function setSuperUser(email,superuser,ownerEmail = undefined, ownerPassword = undefined) {
+
+
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/setSuperUser' + "/" + email + "/" + superuser, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
+
+
 
 async function addOrganization(organizationname,ownerEmail, ownerPassword) {
 
@@ -506,7 +530,6 @@ module.exports = {
   retrieveInvite,
   acceptInvite,
   getUsers,
-  getAllUsers,
   removeUser,
   updateUser,
   addOrganization,
@@ -524,5 +547,8 @@ module.exports = {
   getFiles,
   setAccessKey,
   deleteAuth,
-  getItemFromType
+  getItemFromType,
+  setSuperUser,
+  deleteUser,
+
 };
