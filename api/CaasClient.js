@@ -469,6 +469,14 @@ async function updateOrgTokens(orgid,tokens, ownerEmail, ownerPassword) {
   return await res.json();
 }
 
+
+
+async function updateOrgMaxStorage(orgid,maxstorage, ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/updateOrgMaxStorage' + "/" + orgid + "/" + maxstorage,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
 async function getStatsByMonth(orgid,month,year, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
   let res = await fetch(serveraddress + '/caas_api/getStatsByMonth' + "/" + orgid + "/" + month + "/" + year,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -564,5 +572,6 @@ module.exports = {
   getItemFromType,
   setSuperUser,
   deleteUser,
-  deleteOrganization
+  deleteOrganization,
+  updateOrgMaxStorage
 };
