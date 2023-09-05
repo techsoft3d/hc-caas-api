@@ -363,7 +363,17 @@ async function setSuperUser(email,superuser,ownerEmail = undefined, ownerPasswor
   return await res.json();
 }
 
+async function resetPassword(email,ownerEmail = undefined, ownerPassword = undefined) {
 
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+
+  let res = await fetch(serveraddress + '/caas_api/resetPassword' + "/" + email, {  mode:'cors', method: 'PUT',
+      headers: {
+          'CS-API-Arg': JSON.stringify(api_arg),         
+      } });
+
+  return await res.json();
+}
 
 async function addOrganization(organizationname,ownerEmail, ownerPassword) {
 
@@ -377,8 +387,6 @@ async function addOrganization(organizationname,ownerEmail, ownerPassword) {
   return await res.json();
 }
 
-
-
 async function getOrganizations(ownerEmail, ownerPassword, getAll = false) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
@@ -390,7 +398,6 @@ async function getOrganizations(ownerEmail, ownerPassword, getAll = false) {
 
   return await res.json();
 }
-
 
 async function getOrganization(orgid, ownerEmail, ownerPassword) {
 
@@ -573,5 +580,6 @@ module.exports = {
   setSuperUser,
   deleteUser,
   deleteOrganization,
-  updateOrgMaxStorage
+  updateOrgMaxStorage,
+  resetPassword
 };
