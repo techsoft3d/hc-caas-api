@@ -51,7 +51,7 @@ async function uploadModelFromFileInput(file, startpath = "", args = {}) {
 }
 
 async function _uploadModel(formData, startpath = "", args = {}) {
-  let api_arg = { skipConversion: args.skipConversion,hcVersion: args.hcVersion, webhook: webhook, startPath: startpath, accessPassword: accessPassword, accessKey: accessKey };
+  let api_arg = { conversionCommandLine: args.conversionCommandLine,skipConversion: args.skipConversion,hcVersion: args.hcVersion, webhook: webhook, startPath: startpath, accessPassword: accessPassword, accessKey: accessKey };
   let res = await fetch(serveraddress + '/caas_api/upload', { method: 'POST', body: formData, headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
