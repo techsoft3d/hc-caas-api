@@ -4,6 +4,28 @@ const fs = require('fs');
 
 let serveraddress, accessPassword = "", accessKey = null, webhook = null;
 
+function exportToFile(data, filename) {
+
+  function _makeBinaryFile(text) {
+      let data = new Blob([text],  {type: "application/octet-stream"});           
+      let file = window.URL.createObjectURL(data);   
+      return file;
+    }
+
+
+  let link = document.createElement('a');
+  link.setAttribute('download', filename);
+  link.href = _makeBinaryFile(data);
+  document.body.appendChild(link);
+
+  window.requestAnimationFrame(function () {
+      let event = new MouseEvent('click');
+      link.dispatchEvent(event);
+      document.body.removeChild(link);
+  });
+}              
+
+
 function init(serveraddress_in, config = null) {
   serveraddress = serveraddress_in;
   if (config) {
@@ -146,7 +168,12 @@ async function getFileByType(storageid, type, outputPath = null) {
   else {
     let buffer = await res.arrayBuffer();
     if (outputPath) {
-      fs.writeFileSync(outputPath, Buffer.from(buffer));
+      if (typeof fs !== 'undefined') {
+        fs.writeFileSync(outputPath, Buffer.from(buffer));
+      }
+      else {
+        exportToFile(buffer, outputPath);
+      }
     }
     return buffer;
   }
@@ -161,7 +188,12 @@ async function getFileByName(storageid, name, outputPath = null) {
   else {
     let buffer = await res.arrayBuffer();
     if (outputPath) {
-      fs.writeFileSync(outputPath, Buffer.from(buffer));
+      if (typeof fs !== 'undefined') {
+        fs.writeFileSync(outputPath, Buffer.from(buffer));
+      }
+      else {
+        exportToFile(buffer, outputPath);
+      }
     }
     return buffer
   }
