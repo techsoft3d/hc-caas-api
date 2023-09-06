@@ -542,6 +542,13 @@ async function getFiles(orgid,ownerEmail, ownerPassword) {
 }
 
 
+async function getDataAuth(itemid, orgid,ownerEmail, ownerPassword) {
+  let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let res = await fetch(serveraddress + '/caas_api/getDataAuth' + "/" + itemid + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
+
+
 async function deleteAuth(orgid,itemid,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
   let res = await fetch(serveraddress + '/caas_api/deleteAuth' + "/" + orgid + "/" + itemid,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
@@ -613,5 +620,6 @@ module.exports = {
   deleteUser,
   deleteOrganization,
   updateOrgMaxStorage,
-  resetPassword
+  resetPassword,
+  getDataAuth,
 };
