@@ -1,11 +1,11 @@
 {
   "name": "ts3d.hc.caas.api",
-  "version": "0.7.39",
+  "version": "0.7.40",
   "description": "",
   "main": "./api/CaasClient.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --max-old-space-size=8192 testNoPolling.js",
+    "start": "nodemon --max-old-space-size=8192 testXMLSettings.js",
     "startPolling": "nodemon --max-old-space-size=8192 testPolling.js"
   },
   "author": "Guido Hoffmann",

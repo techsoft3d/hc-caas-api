@@ -84,6 +84,20 @@ async function uploadModel(filename,blob, startpath = "", args = {}) {
   return await _uploadModel(form, startpath, args);
 }
 
+
+async function uploadModels(filenames,blobs, startmodel = "", args = {}) {
+  let form = new FormData();
+  let size = 0;
+  for (let i = 0; i < filenames.length; i++) {            
+    form.append('files', blobs[i],filenames[i]);  
+    size += blobs[i].size;  
+  }
+  let api_arg  = {conversionCommandLine: args.conversionCommandLine, skipConversion: args.skipConversion, hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
+  let res = await fetch(serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+  let json =  await res.json();
+  return {totalsize:size, data:json};
+}
+
 async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
   let form = new FormData();
   form.append('file', fs.createReadStream(pathtofile));    
@@ -100,7 +114,7 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
     size += stats.size;        
   }
 
-  let api_arg  = {skipConversion: args.skipConversion, hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
+  let api_arg  = {conversionCommandLine: args.conversionCommandLine, skipConversion: args.skipConversion, hcVersion: args.hcVersion,webhook: webhook, rootFile:startmodel, accessPassword:accessPassword, accessKey:accessKey};            
   let res = await fetch(serveraddress + '/caas_api/uploadArray', { method: 'POST', body: form,headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   let json =  await res.json();
   return {totalsize:size, data:json};
@@ -622,4 +636,5 @@ module.exports = {
   updateOrgMaxStorage,
   resetPassword,
   getDataAuth,
+  uploadModels
 };
