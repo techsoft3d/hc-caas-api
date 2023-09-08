@@ -133,7 +133,7 @@ async function uploadModel(filename,blob, startpath = "", args = {}) {
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
  * @param {string} [args.conversionCommandLine=""] - The command line to use for model conversion (optional).
  * @param {boolean} [args.skipConversion=false] - Whether to skip model conversion (optional).
- * @param {string} [args.hcVersion=""] - The version of Houdini to use for model conversion (optional).
+ * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the total size of the uploaded files and the response from the CaaS API.
  */
 async function uploadModels(filenames,blobs, startmodel = "", args = {}) {
@@ -174,7 +174,7 @@ async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
  * @param {string} [args.conversionCommandLine=""] - The command line to use for model conversion (optional).
  * @param {boolean} [args.skipConversion=false] - Whether to skip model conversion (optional).
- * @param {string} [args.hcVersion=""] - The version of Houdini to use for model conversion (optional).
+ * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the total size of the uploaded files and the response from the CaaS API.
  */
 async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
@@ -199,7 +199,7 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
  * @param {string} modelname - The name of the model to retrieve an upload token for.
  * @param {number} size - The size of the model file (in bytes).
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
- * @param {string} [args.hcVersion=""] - The version of Houdini to use for model conversion (optional).
+ * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
  * @param {string} [args.storageid=""] - The ID of the storage to upload the model to (optional).
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the upload token for the specified model.
  */
@@ -360,7 +360,7 @@ async function deleteModel(storageid) {
  * @param {string} [geo=undefined] - The geometry to retrieve a streaming session for (optional).
  * @param {string} [renderType=null] - The render type to retrieve a streaming session for (optional).
  * @param {Array<string>} [accessItems=undefined] - The access items to retrieve a streaming session for (optional).
- * @param {string} [hcVersion=undefined] - The version of Houdini to use for the streaming session (optional).
+ * @param {string} [hcVersion=undefined] - The version of HOOPS Communicator to use for the streaming session (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function getStreamingSession(geo = undefined, renderType = null, accessItems = undefined,hcVersion = undefined) {
@@ -452,6 +452,10 @@ async function getStatus(json) {
   let res = await fetch(serveraddress + '/caas_api/status' + (json ? '/true' : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function checkPassword(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
