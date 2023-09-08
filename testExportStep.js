@@ -4,6 +4,5 @@ const caasClient = require('./api/CaasClient');
     caasClient.init('http://localhost:3001');
     let info = await caasClient.uploadModelFromFile("./testfiles/axe.CATPART",null,{conversionCommandLine:["--output_step",""]});
     await caasClient.waitUntilConverted(info.itemid);
-    let res = await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");
-    console.log(res);
+    await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");   
 })();
