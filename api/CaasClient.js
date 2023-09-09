@@ -31,9 +31,9 @@ function _exportToFile(data, filename) {
  *
  * @param {string} serveraddress_in - The URL of the CaaS server.
  * @param {Object} [config=null] - The configuration object for the CaaS client.
- * @param {string} [config.accessPassword=""] - The password for the CaaS API.
+ * @param {string} [config.accessPassword=""] - The admin password for the CaaS API. Only for trusted clients.
  * @param {string} config.accessKey - The access key for the CaaS API.
- * @param {string} config.webhook - The webhook for the CaaS API.
+ * @param {string} config.webhook - The webhook for the CaaS API. This is where CaaS will send notifications when models are converted.
  */
 function init(serveraddress_in, config = null) {
   serveraddress = serveraddress_in;
@@ -69,7 +69,7 @@ async function waitUntilConverted(storageid, interval = 1000) {
 
 
 /**
- * Retrieves information about the CaaS API from the server.
+ * Retrieves information about the CaaS Version from the server.
  *
  * @returns {Promise<Object>} - A Promise that resolves to an object containing information about the CaaS API.
  */
@@ -353,25 +353,25 @@ async function deleteModel(storageid) {
   return await res.json();
 }
 
-
 /**
  * Retrieves a streaming session from the CaaS server.
  *
  * @param {Object} [config={}] - An optional object containing configuration options for the streaming session.
  * @param {string} [config.hcVersion] - The version of the HTML5 client to use for the streaming session (optional).
- * @param {string} [config.accessPassword] - The access password to use for the streaming session (optional).
- * @param {string} [config.accessKey] - The access key to use for the streaming session (optional).
  * @param {string} [config.geo] - The geographic location to use for the streaming session (optional).
  * @param {string} [config.renderType] - The renderer type to use for the streaming session (optional).
  * @param {Array<string>} [config.accessItems] - An array of access items to use for the streaming session (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function getStreamingSession(config = {}) {
-  let api_arg = { hcVersion: config.hcVersion, accessPassword:config.accessPassword, accessKey:config.accessKey, geo:config.geo, renderType: config.renderType,accessItems:config.accessItems};
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey,hcVersion: config.hcVersion, geo:config.geo, renderType: config.renderType,accessItems:config.accessItems};  
   let res = await fetch(serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
-  return await res.json();
+  let sessiondata =  await res.json();
+  if (!sessiondata.ERROR) {
+    sessiondata.endpointUri = (sessiondata.port == "443" ? 'wss://' : "ws://") + sessiondata.serverurl + ":" + sessiondata.port + '?token=' + sessiondata.sessionid;
+  }
+  return sessiondata;
 };
-
 
 /**
  * Enables stream access for the specified storage IDs on the specified streaming session.
@@ -437,7 +437,7 @@ function initializeWebViewer(data, config) {
   }
   let viewer = new Communicator.WebViewer({
     containerId: config && config.containerId ? config.containerId : 'viewer',
-    endpointUri: (data.port == "443" ? 'wss://' : "ws://") + data.serverurl + ":" + data.port + '?token=' + data.sessionid,
+    endpointUri: data.endpointUri,
     model: (config.model ? config.model : "_empty"),
     rendererType: ((data.renderType && data.renderType == "server") ? Communicator.RendererType.Server : Communicator.RendererType.Client)
   });

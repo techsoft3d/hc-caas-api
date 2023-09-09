@@ -136,12 +136,41 @@ For testing purposes you can also get the SCS file directly from the CaaS server
 let buffer =  await caasClient.getFileByType(item.storageID,"scs"); 
 if (!buffer.ERROR) {
    await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(buffer));
+}
 
 ```
 
 ### Streaming with SCZ Files
-To utilize the streaming functionality you need to first request a streaming session and then make one or more models accessible for streaming.
+To utilize the streaming functionality you need to request a streaming session and then make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with:
 
 ```
+/// In production this call should be performed server-side and the result should be passed to the client
 let sessiondata = await caasClient.getStreamingSession(null,null,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
+
+let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later
+
+if (!sessiondata.ERROR) {
+    viewer = new Communicator.WebViewer({
+        containerId: "mycontainer"
+        endpointUri: sessiondata.endpointUri,
+        model: "bnc.hsf"
+        rendererType: Communicator.RendererType.Client)
+    });
+}
 ```
+
+### Adding additional models to a streaming session
+To add additional models to a streaming session you can use the `addStreamingModels` function. This function takes an existing sessionid and an array of model ids.
+
+```
+/// In production this call should be performed server-side
+let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);
+
+hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),"model1");
+```
+
+
+
+
+
+
