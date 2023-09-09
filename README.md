@@ -141,12 +141,13 @@ if (!buffer.ERROR) {
 ```
 
 ### Streaming with SCZ Files
-To utilize the streaming functionality you need to request a streaming session and then make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with:
+To utilize the streaming functionality you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
+
+```
 
 ```
 /// In production this call should be performed server-side and the result should be passed to the client
-let sessiondata = await caasClient.getStreamingSession(null,null,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
-
+let sessiondata = await caasClient.getStreamingSession({accessItems: ["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
 let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later
 
 if (!sessiondata.ERROR) {
@@ -160,7 +161,7 @@ if (!sessiondata.ERROR) {
 ```
 
 ### Adding additional models to a streaming session
-To add additional models to a streaming session you can use the `addStreamingModels` function. This function takes an existing sessionid and an array of model ids.
+To add additional models to a streaming session you can use the `enableStreamAccess` function. This function takes an existing sessionid and an array of model ids.
 
 ```
 /// In production this call should be performed server-side

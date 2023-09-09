@@ -145,27 +145,34 @@ if (!buffer.ERROR) {
 
 </code></pre>
 <h3>Streaming with SCZ Files</h3>
-<p>To utilize the streaming functionality you need to request a streaming session and then make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with:</p>
-<pre class="prettyprint source"><code>/// In production this call should be performed server-side and the result should be passed to the client
-let sessiondata = await caasClient.getStreamingSession(null,null,[&quot;cf41d235-76e3-4903-b6be-6fdc0a5176a5&quot;]);
-
-let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later
-
-if (!sessiondata.ERROR) {
-    viewer = new Communicator.WebViewer({
-        containerId: &quot;mycontainer&quot;
-        endpointUri: sessiondata.endpointUri,
-        model: &quot;bnc.hsf&quot;
-        rendererType: Communicator.RendererType.Client)
-    });
-}
+<p>To utilize the streaming functionality you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the <code>getStreamingSession</code> function. In that case specify &quot;_empty&quot; for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the <code>getModelData</code> function.</p>
+<pre class="prettyprint source"><code>
 </code></pre>
-<h3>Adding additional models to a streaming session</h3>
-<p>To add additional models to a streaming session you can use the <code>addStreamingModels</code> function. This function takes an existing sessionid and an array of model ids.</p>
-<pre class="prettyprint source"><code>/// In production this call should be performed server-side
-let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);
+<p>/// In production this call should be performed server-side and the result should be passed to the client
+let sessiondata = await caasClient.getStreamingSession({accessItems: [&quot;cf41d235-76e3-4903-b6be-6fdc0a5176a5&quot;]);
+let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later</p>
+<p>if (!sessiondata.ERROR) {
+viewer = new Communicator.WebViewer({
+containerId: &quot;mycontainer&quot;
+endpointUri: sessiondata.endpointUri,
+model: &quot;bnc.hsf&quot;
+rendererType: Communicator.RendererType.Client)
+});
+}</p>
+<pre class="prettyprint source"><code>
+### Adding additional models to a streaming session
+To add additional models to a streaming session you can use the `enableStreamAccess` function. This function takes an existing sessionid and an array of model ids.
 
-hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),&quot;model1&quot;);
+</code></pre>
+<p>/// In production this call should be performed server-side
+let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);</p>
+<p>hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),&quot;model1&quot;);</p>
+<pre class="prettyprint source"><code>
+
+
+
+
+
 </code></pre></article>
     </section>
 
