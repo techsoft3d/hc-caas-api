@@ -279,8 +279,7 @@ async function reconvertModel(storageid, config = {}) {
  * @param {string} [config_in.conversionCommandLine=""] - The command line to use for model conversion (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function createCustomImage(storageid, config_in) {
-  let config = config_in ? config_in : {};
+async function createCustomImage(storageid, config = {}) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey, customImageCode: config.customImageCode,conversionCommandLine : config.conversionCommandLine};
   let res = await fetch(serveraddress + '/caas_api/customImage/' + storageid, { method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
@@ -354,17 +353,21 @@ async function deleteModel(storageid) {
   return await res.json();
 }
 
+
 /**
- * Retrieves a streaming session for the specified geometry and render type from the CaaS server.
+ * Retrieves a streaming session from the CaaS server.
  *
- * @param {string} [geo=undefined] - The geometry to retrieve a streaming session for (optional).
- * @param {string} [renderType=null] - The render type to retrieve a streaming session for (optional).
- * @param {Array<string>} [accessItems=undefined] - The access items to retrieve a streaming session for (optional).
- * @param {string} [hcVersion=undefined] - The version of HOOPS Communicator to use for the streaming session (optional).
+ * @param {Object} [config={}] - An optional object containing configuration options for the streaming session.
+ * @param {string} [config.hcVersion] - The version of the HTML5 client to use for the streaming session (optional).
+ * @param {string} [config.accessPassword] - The access password to use for the streaming session (optional).
+ * @param {string} [config.accessKey] - The access key to use for the streaming session (optional).
+ * @param {string} [config.geo] - The geographic location to use for the streaming session (optional).
+ * @param {string} [config.renderType] - The renderer type to use for the streaming session (optional).
+ * @param {Array<string>} [config.accessItems] - An array of access items to use for the streaming session (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function getStreamingSession(geo = undefined, renderType = null, accessItems = undefined,hcVersion = undefined) {
-  let api_arg = { hcVersion: hcVersion, accessPassword:accessPassword, accessKey:accessKey, geo:geo, renderType: renderType,accessItems:accessItems };
+async function getStreamingSession(config = {}) {
+  let api_arg = { hcVersion: config.hcVersion, accessPassword:config.accessPassword, accessKey:config.accessKey, geo:config.geo, renderType: config.renderType,accessItems:config.accessItems};
   let res = await fetch(serveraddress + '/caas_api/streamingSession',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
   return await res.json();
 };

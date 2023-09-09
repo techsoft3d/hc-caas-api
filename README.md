@@ -109,3 +109,39 @@ let modelData = await caasClient.getModelData(info.data.itemid);
 console.log(modelData);
 ```
 
+### SCS Viewing
+To view an scs model in the browser simply call `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
+
+Server:
+```
+let result =  await caasClient.getFileByType(item.storageID,"scs"); 
+if (result.ERROR) {
+    res.status(404).json(result);
+}
+else {
+    res.send(Buffer.from(result));
+}
+```
+
+Client:
+```
+// Get the SCS file from your server via fetch
+let ab = await res.arrayBuffer();
+await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(ab));
+```
+
+Client Only:
+For testing purposes you can also get the SCS file directly from the CaaS server in the web client using the client-side version of the API:
+```
+let buffer =  await caasClient.getFileByType(item.storageID,"scs"); 
+if (!buffer.ERROR) {
+   await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(buffer));
+
+```
+
+### Streaming with SCZ Files
+To utilize the streaming functionality you need to first request a streaming session and then make one or more models accessible for streaming.
+
+```
+let sessiondata = await caasClient.getStreamingSession(null,null,["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
+```

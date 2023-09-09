@@ -43,7 +43,7 @@
 
             caasClient.init('https://caas.techsoft3d.com', { accessKey: "" });
             //let info = await caasClient.getInfo();
-            let sessiondata = await caasClient.getStreamingSession(null, null,null,{hcVersion:"2023-1-0"});
+            let sessiondata = await caasClient.getStreamingSession();
             sessionid = sessiondata.sessionid;
             hwv = caasClient.initializeWebViewer(sessiondata, { containerId: "myContainer"});
 

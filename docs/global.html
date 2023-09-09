@@ -2163,7 +2163,7 @@
     
 
     
-    <h4 class="name" id="getStreamingSession"><span class="type-signature">(async) </span>getStreamingSession<span class="signature">(geo<span class="signature-attributes">opt</span>, renderType<span class="signature-attributes">opt</span>, accessItems<span class="signature-attributes">opt</span>, hcVersion<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+    <h4 class="name" id="getStreamingSession"><span class="type-signature">(async) </span>getStreamingSession<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
     
 
     
@@ -2171,7 +2171,7 @@
 
 
 <div class="description">
-    <p>Retrieves a streaming session for the specified geometry and render type from the CaaS server.</p>
+    <p>Retrieves a streaming session from the CaaS server.</p>
 </div>
 
 
@@ -2211,6 +2211,165 @@
 
         <tr>
             
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {}
+                
+                </td>
+            
+
+            <td class="description last"><p>An optional object containing configuration options for the streaming session.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hcVersion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The version of the HTML5 client to use for the streaming session (optional).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>accessPassword</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The access password to use for the streaming session (optional).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>accessKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The access key to use for the streaming session (optional).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>geo</code></td>
             
 
@@ -2236,12 +2395,8 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"><p>The geometry to retrieve a streaming session for (optional).</p></td>
+            <td class="description last"><p>The geographic location to use for the streaming session (optional).</p></td>
         </tr>
 
     
@@ -2273,14 +2428,8 @@
             
 
             
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
 
-            <td class="description last"><p>The render type to retrieve a streaming session for (optional).</p></td>
+            <td class="description last"><p>The renderer type to use for the streaming session (optional).</p></td>
         </tr>
 
     
@@ -2312,49 +2461,15 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"><p>The access items to retrieve a streaming session for (optional).</p></td>
+            <td class="description last"><p>An array of access items to use for the streaming session (optional).</p></td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>hcVersion</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
             </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The version of HOOPS Communicator to use for the streaming session (optional).</p></td>
         </tr>
 
     
