@@ -114,7 +114,7 @@ To view an scs model in the browser simply call `getFileByType` with the itemid 
 
 Server:
 ```
-let result =  await caasClient.getFileByType(item.storageID,"scs"); 
+let result =  await caasClient.getFileByType("ID-OF-MODEL-TO-LOAD","scs"); 
 if (result.ERROR) {
     res.status(404).json(result);
 }
@@ -125,7 +125,8 @@ else {
 
 Client:
 ```
-// Get the SCS file from your server via fetch
+// Get the SCS file from your server (typical via a fetch request to your server)
+
 let ab = await res.arrayBuffer();
 await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(ab));
 ```
@@ -133,7 +134,7 @@ await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array
 Client Only:
 For testing purposes you can also get the SCS file directly from the CaaS server in the web client using the client-side version of the API:
 ```
-let buffer =  await caasClient.getFileByType(item.storageID,"scs"); 
+let buffer =  await caasClient.getFileByType("ID-OF-MODEL-TO-LOAD","scs"); 
 if (!buffer.ERROR) {
    await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(buffer));
 }
@@ -144,10 +145,8 @@ if (!buffer.ERROR) {
 To utilize the streaming functionality you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
 
 ```
-
-```
 /// In production this call should be performed server-side and the result should be passed to the client
-let sessiondata = await caasClient.getStreamingSession({accessItems: ["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]);
+let sessiondata = await caasClient.getStreamingSession({accessItems: ["ID-OF-MODEL-TO-STREAM"]});
 let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later
 
 if (!sessiondata.ERROR) {
@@ -164,14 +163,8 @@ if (!sessiondata.ERROR) {
 To add additional models to a streaming session you can use the `enableStreamAccess` function. This function takes an existing sessionid and an array of model ids.
 
 ```
-/// In production this call should be performed server-side
+// In production this call should be performed server-side
 let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);
 
 hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),"model1");
 ```
-
-
-
-
-
-
