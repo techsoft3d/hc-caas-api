@@ -32,7 +32,6 @@ To use the API with the official CaaS server, you will need to obtain an API key
  caasClient.init('https://caas.techsoft3d.com',{accessKey :"ENTER YOUR ACCESS KEY HERE"});   
 ```
 
-
 ## Example Usage
 
 ### Simple Conversion
@@ -109,8 +108,19 @@ let modelData = await caasClient.getModelData(info.data.itemid);
 console.log(modelData);
 ```
 
-### SCS Viewing
-To view an scs model in the browser simply call `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
+### SCS Viewing via download token
+
+The simplest way to view a previous converted SCS file via CaaS is to use the `getDownloadToken` function. This function returns a unique, time-limited token that can be used to download the SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.
+
+```
+// In production this call should be performed server-side
+let res = await caasClient.getDownloadToken("ID-OF-MODEL-TO-LOAD","scs");
+
+await hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), res.token);
+```
+
+### SCS Viewing with Buffer
+You can also access scs files and other files with a call to `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
 
 Server:
 ```
@@ -126,12 +136,11 @@ else {
 Client:
 ```
 // Get the SCS file from your server (typical via a fetch request to your server)
-
 let ab = await res.arrayBuffer();
 await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(ab));
 ```
 
-Client Only:
+Client Only:  
 For testing purposes you can also get the SCS file directly from the CaaS server in the web client using the client-side version of the API:
 ```
 let buffer =  await caasClient.getFileByType("ID-OF-MODEL-TO-LOAD","scs"); 
@@ -141,8 +150,8 @@ if (!buffer.ERROR) {
 
 ```
 
-### Streaming with SCZ Files
-To utilize the streaming functionality you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
+### Streaming 
+To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
 
 ```
 /// In production this call should be performed server-side and the result should be passed to the client

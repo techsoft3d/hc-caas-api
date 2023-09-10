@@ -120,8 +120,15 @@ await caasClient.waitUntilConverted(info.data.itemid);
 let modelData = await caasClient.getModelData(info.data.itemid);
 console.log(modelData);
 </code></pre>
-<h3>SCS Viewing</h3>
-<p>To view an scs model in the browser simply call <code>getFileByType</code> with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.</p>
+<h3>SCS Viewing via download token</h3>
+<p>The simplest way to view a previous converted SCS file via CaaS is to use the <code>getDownloadToken</code> function. This function returns a unique, time-limited token that can be used to download the SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.</p>
+<pre class="prettyprint source"><code>// In production this call should be performed server-side
+let res = await caasClient.getDownloadToken(&quot;ID-OF-MODEL-TO-LOAD&quot;,&quot;scs&quot;);
+
+await hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), res.token);
+</code></pre>
+<h3>SCS Viewing with Buffer</h3>
+<p>You can also access scs files and other files with a call to <code>getFileByType</code> with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.</p>
 <p>Server:</p>
 <pre class="prettyprint source"><code>let result =  await caasClient.getFileByType(&quot;ID-OF-MODEL-TO-LOAD&quot;,&quot;scs&quot;); 
 if (result.ERROR) {
@@ -133,11 +140,10 @@ else {
 </code></pre>
 <p>Client:</p>
 <pre class="prettyprint source"><code>// Get the SCS file from your server (typical via a fetch request to your server)
-
 let ab = await res.arrayBuffer();
 await hwv.model.loadSubtreeFromScsBuffer(hwv.model.getRootNode(), new Uint8Array(ab));
 </code></pre>
-<p>Client Only:
+<p>Client Only:<br>
 For testing purposes you can also get the SCS file directly from the CaaS server in the web client using the client-side version of the API:</p>
 <pre class="prettyprint source"><code>let buffer =  await caasClient.getFileByType(&quot;ID-OF-MODEL-TO-LOAD&quot;,&quot;scs&quot;); 
 if (!buffer.ERROR) {
@@ -145,8 +151,8 @@ if (!buffer.ERROR) {
 }
 
 </code></pre>
-<h3>Streaming with SCZ Files</h3>
-<p>To utilize the streaming functionality you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the <code>getStreamingSession</code> function. In that case specify &quot;_empty&quot; for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the <code>getModelData</code> function.</p>
+<h3>Streaming</h3>
+<p>To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the <code>getStreamingSession</code> function. In that case specify &quot;_empty&quot; for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the <code>getModelData</code> function.</p>
 <pre class="prettyprint source"><code>/// In production this call should be performed server-side and the result should be passed to the client
 let sessiondata = await caasClient.getStreamingSession({accessItems: [&quot;ID-OF-MODEL-TO-STREAM&quot;]});
 let sessionid = sessiondata.sessionid;   // The session id is needed to add additional models to the session later
