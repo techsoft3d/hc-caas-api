@@ -17,6 +17,9 @@ To install the API, run the following command:
 npm install hc-caas-api
 ```
 
+
+
+
 ### Client-Side
 Copy the caas.min.js file from the dist folder into your project. **The client-side version of the library is only provided for development/testing use and should not be used in production.**
 
@@ -31,13 +34,14 @@ To use the API with the official CaaS server, you will need to obtain an API key
 **Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!** 
 
 ```
+const caasClient = require('ts3d.hc.caas.api');
 caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
 ```
 
 ## Example Usage
 
 ### Simple Conversion
-In this example a file is uploaded to the CaaS server from the local file system, converted to SC/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished. 
+In this example a file is uploaded to the CaaS server from the local file system, converted to SCS/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished. 
 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
