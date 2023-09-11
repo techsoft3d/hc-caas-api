@@ -460,28 +460,29 @@ async function getStatus(json) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 async function checkPassword(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/checkPassword/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/checkPassword/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function getUserInfo(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/userInfo/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/userInfo/' + email + "/" + password,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
 async function changeOrgName(email,password, orgid,orgname) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/changeOrgName/' + email + "/" + password + "/" + orgid + "/" + orgname,{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/changeOrgName/' + email + "/" + password + "/" + orgid + "/" + orgname,{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function getUsers(email,password, orgid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/getUsers/' + email + "/" + password +  (orgid ? ("/" + orgid) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getUsers/' + email + "/" + password +  (orgid ? ("/" + orgid) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
@@ -489,13 +490,13 @@ async function getUsers(email,password, orgid) {
 
 async function retrieveInvite(inviteid) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/retrieveInvite/' + inviteid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/retrieveInvite/' + inviteid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function acceptInvite(inviteid,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/acceptInvite/' + inviteid + (password ? ("/" + password) : ""),{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/acceptInvite/' + inviteid + (password ? ("/" + password) : ""),{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
@@ -513,7 +514,7 @@ async function addUser(email,role = 1,ownerEmail = undefined, ownerPassword = un
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/addUser', {  body: fbody, mode:'cors', method: 'POST',
+  let res = await fetch(serveraddress + '/caas_api/accounts/addUser', {  body: fbody, mode:'cors', method: 'POST',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),
           "Content-type": "application/json; charset=UTF-8"
@@ -536,7 +537,7 @@ async function updateUser(email,role = undefined,ownerEmail = undefined, ownerPa
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/updateUser', {  body: fbody, mode:'cors', method: 'POST',
+  let res = await fetch(serveraddress + '/caas_api/accounts/updateUser', {  body: fbody, mode:'cors', method: 'POST',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),
           "Content-type": "application/json; charset=UTF-8"
@@ -550,7 +551,7 @@ async function removeUser(email,organizationID,ownerEmail = undefined, ownerPass
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/removeUser' + "/" + email + "/" + organizationID, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/removeUser' + "/" + email + "/" + organizationID, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -564,7 +565,7 @@ async function deleteUser(email,ownerEmail = undefined, ownerPassword = undefine
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/deleteUser' + "/" + email, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/deleteUser' + "/" + email, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -578,7 +579,7 @@ async function deleteOrganization(orgid,ownerEmail = undefined, ownerPassword = 
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/deleteOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/deleteOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -591,7 +592,7 @@ async function setSuperUser(email,superuser,ownerEmail = undefined, ownerPasswor
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/setSuperUser' + "/" + email + "/" + superuser, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/setSuperUser' + "/" + email + "/" + superuser, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -603,7 +604,7 @@ async function resetPassword(email,ownerEmail = undefined, ownerPassword = undef
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/resetPassword' + "/" + email, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/resetPassword' + "/" + email, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -615,7 +616,7 @@ async function addOrganization(organizationname,ownerEmail, ownerPassword) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/addOrganization' + "/" + organizationname, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/addOrganization' + "/" + organizationname, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -627,7 +628,7 @@ async function getOrganizations(ownerEmail, ownerPassword, getAll = false) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/getOrganizations' + (getAll ? ("/" + getAll) : ""), {  mode:'cors', 
+  let res = await fetch(serveraddress + '/caas_api/accounts/getOrganizations' + (getAll ? ("/" + getAll) : ""), {  mode:'cors', 
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -639,7 +640,7 @@ async function getOrganization(orgid, ownerEmail, ownerPassword) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/getOrganization' + "/" + orgid, {  mode:'cors', 
+  let res = await fetch(serveraddress + '/caas_api/accounts/getOrganization' + "/" + orgid, {  mode:'cors', 
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -652,7 +653,7 @@ async function switchOrganization(orgid, ownerEmail, ownerPassword) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/switchOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/switchOrganization' + "/" + orgid, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -666,7 +667,7 @@ async function getAPIKeys(ownerEmail, ownerPassword) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/getAPIKeys', {  mode:'cors', 
+  let res = await fetch(serveraddress + '/caas_api/accounts/getAPIKeys', {  mode:'cors', 
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -679,7 +680,7 @@ async function invalidateAPIKey(key, ownerEmail, ownerPassword) {
 
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/invalidateAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/invalidateAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -692,7 +693,7 @@ async function editAPIKey(key,name, ownerEmail, ownerPassword) {
 
   let api_arg = { name: name,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
-  let res = await fetch(serveraddress + '/caas_api/editAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
+  let res = await fetch(serveraddress + '/caas_api/accounts/editAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
       headers: {
           'CS-API-Arg': JSON.stringify(api_arg),         
       } });
@@ -702,13 +703,13 @@ async function editAPIKey(key,name, ownerEmail, ownerPassword) {
 
 async function generateAPIKey(name, ownerEmail, ownerPassword) {
   let api_arg = { name: name,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/generateAPIKey',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/generateAPIKey',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function updateOrgTokens(orgid,tokens, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/updateOrgTokens' + "/" + orgid + "/" + tokens,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/updateOrgTokens' + "/" + orgid + "/" + tokens,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
@@ -716,53 +717,53 @@ async function updateOrgTokens(orgid,tokens, ownerEmail, ownerPassword) {
 
 async function updateOrgMaxStorage(orgid,maxstorage, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/updateOrgMaxStorage' + "/" + orgid + "/" + maxstorage,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/updateOrgMaxStorage' + "/" + orgid + "/" + maxstorage,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function getStatsByMonth(orgid,month,year, ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/getStatsByMonth' + "/" + orgid + "/" + month + "/" + year,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getStatsByMonth' + "/" + orgid + "/" + month + "/" + year,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function injectStats(orgid,stats, ownerEmail, ownerPassword) {
   let api_arg = {stats: stats,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/injectStats' + "/" + orgid ,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/injectStats' + "/" + orgid ,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 async function updatePassword(newpassword,ownerEmail, ownerPassword) {
   let api_arg = {newpassword: newpassword,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/updatePassword',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/updatePassword',{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
 async function getFiles(orgid,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/getFiles' + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getFiles' + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
 async function getDataAuth(itemid, orgid,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/getDataAuth' + "/" + itemid + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getDataAuth' + "/" + itemid + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
 async function deleteAuth(orgid,itemid,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/deleteAuth' + "/" + orgid + "/" + itemid,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/deleteAuth' + "/" + orgid + "/" + itemid,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
 async function getItemFromType(orgid,itemid,type,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/getItemFromType' + "/" + orgid + "/" + itemid + (type ? ("/" + type) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getItemFromType' + "/" + orgid + "/" + itemid + (type ? ("/" + type) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   if (res.status == 404) {
     return { ERROR: "File not found" };
   }
