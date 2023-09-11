@@ -1,47 +1,60 @@
-# CaaS Node/Client-Side API (hc-caas-api)
+# CaaS API (hc-caas-api)
+
+## Version (0.7.44)
+* Initial Release
+* Requires CaaS version 0.11.91 or later
 
 ## Overview
 
-This is the Node.js library for the [Communicator as a Service (CaaS)](https://github.com/techsoft3d/hc-caas) project. It is used to simplify communication with a CaaS Server Instance. You can use it to convert and view CAD models, as well as generate images, STEP, PDF and other formats.  
+This is the Node.js library for the [Communicator as a Service (CaaS)](https://github.com/techsoft3d/hc-caas) project. It is used to simplify communication with a CaaS Server Instance.
 Using this library you can either connect to your own instance of CaaS or to the official CaaS Server API accessible at [https://caas.techsoft3d.com](https://caas.techsoft3d.com).
 
 For information on how to communicate with CaaS through HTTP requests, please see the [CaaS Github Project](https://github.com/techsoft3d/hc-caas)
 
+
+## Disclaimer
+**This library is not an officially supported part of HOOPS Communicator and provided as-is.**
+
+
+## Feedback
+For questions/feedback please send an email to guido@techsoft3d.com or post in our [forum](https://forum.techsoft3d.com/). For a 60 day trial of the HOOPS Web Platform go to https://www.techsoft3d.com/products/hoops/web-platform.
+
+## Documentation
+The online documentation for the CaaS API can be found [here](https://techsoft3d.github.io/hc-caas-api/).
+
 ## Installation
 
-
 ### Server-Side
-To install the API, run the following command:
+To install the library for use in your node project, simply run the following command in your project folder:
 
 ```
 npm install hc-caas-api
 ```
 
-
-
+To use the library in your project, simply require it:
+```
+const caasClient = require('ts3d.hc.caas.api');
+```
 
 ### Client-Side
-Copy the caas.min.js file from the dist folder into your project. **The client-side version of the library is only provided for development/testing use and should not be used in production.**
-
-
+Copy the caas.min.js file from the `dist` folder into your project and include it in your HTML file. **The client-side version of the library is only provided for development/testing use and should not be used in production.**
 
 ## Initialization and Authentication
 
 To initialize the library simply provide the URL of the CaaS server instance you wish to connect to. 
 
-To use the API with the official CaaS server, you will need to provide an API access key when initializing the library. You can request an account at [https://caas-admin.techsoft3d.com](https://caas-admin.techsoft3d.com). Once you have an account, you can generate an API access key from the "API Keys" tab. If you are using your own instance of CaaS, authentication is optional.
+To use the library with the official CaaS server, you will need to provide an API access key during initialization. You can request an account at [https://caas-admin.techsoft3d.com](https://caas-admin.techsoft3d.com). Once you have an account, you can generate an API access key from the "API Keys" tab. If you are using your own instance of CaaS, authentication is optional.
 
 **Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!** 
 
 ```
-const caasClient = require('ts3d.hc.caas.api');
 caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
 ```
 
 ## Example Usage
 
 ### Simple Conversion
-In this example a file is uploaded to the CaaS server from the local file system, converted to SCS/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished. 
+In this example a file is uploaded to the CaaS server from the local file system and converted to SCS/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished. 
 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
@@ -75,7 +88,6 @@ let intervalid = setInterval(async () => {
     }            
 }, 1000);
 ```
-
 
 ### Conversions with Webhooks
 Instead of polling to wait for completed conversions a more elegant solution is to use webhooks. If a webhook is passed during intialization, the CaaS server will send a POST request to the webhook URL when a conversion is complete. The POST request will contain a JSON object with information about the converted model.

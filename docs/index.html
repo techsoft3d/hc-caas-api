@@ -43,28 +43,41 @@
 
 
     <section>
-        <article><h1>CaaS Node/Client-Side API (hc-caas-api)</h1>
+        <article><h1>CaaS API (hc-caas-api)</h1>
+<h2>Version (0.7.44)</h2>
+<ul>
+<li>Initial Release</li>
+<li>Requires CaaS version 0.11.91 or later</li>
+</ul>
 <h2>Overview</h2>
-<p>This is the Node.js library for the <a href="https://github.com/techsoft3d/hc-caas">Communicator as a Service (CaaS)</a> project. It is used to simplify communication with a CaaS Server Instance. You can use it to convert and view CAD models, as well as generate images, STEP, PDF and other formats.<br>
+<p>This is the Node.js library for the <a href="https://github.com/techsoft3d/hc-caas">Communicator as a Service (CaaS)</a> project. It is used to simplify communication with a CaaS Server Instance.
 Using this library you can either connect to your own instance of CaaS or to the official CaaS Server API accessible at <a href="https://caas.techsoft3d.com">https://caas.techsoft3d.com</a>.</p>
 <p>For information on how to communicate with CaaS through HTTP requests, please see the <a href="https://github.com/techsoft3d/hc-caas">CaaS Github Project</a></p>
+<h2>Disclaimer</h2>
+<p><strong>This library is not an officially supported part of HOOPS Communicator and provided as-is.</strong></p>
+<h2>Feedback</h2>
+<p>For questions/feedback please send an email to guido@techsoft3d.com or post in our <a href="https://forum.techsoft3d.com/">forum</a>. For a 60 day trial of the HOOPS Web Platform go to https://www.techsoft3d.com/products/hoops/web-platform.</p>
+<h2>Documentation</h2>
+<p>The online documentation for the CaaS API can be found <a href="https://techsoft3d.github.io/hc-caas-api/">here</a>.</p>
 <h2>Installation</h2>
 <h3>Server-Side</h3>
-<p>To install the API, run the following command:</p>
+<p>To install the library for use in your node project, simply run the following command in your project folder:</p>
 <pre class="prettyprint source"><code>npm install hc-caas-api
 </code></pre>
+<p>To use the library in your project, simply require it:</p>
+<pre class="prettyprint source"><code>const caasClient = require('ts3d.hc.caas.api');
+</code></pre>
 <h3>Client-Side</h3>
-<p>Copy the caas.min.js file from the dist folder into your project. <strong>The client-side version of the library is only provided for development/testing use and should not be used in production.</strong></p>
+<p>Copy the caas.min.js file from the <code>dist</code> folder into your project and include it in your HTML file. <strong>The client-side version of the library is only provided for development/testing use and should not be used in production.</strong></p>
 <h2>Initialization and Authentication</h2>
 <p>To initialize the library simply provide the URL of the CaaS server instance you wish to connect to.</p>
-<p>To use the API with the official CaaS server, you will need to provide an API access key when initializing the library. You can request an account at <a href="https://caas-admin.techsoft3d.com">https://caas-admin.techsoft3d.com</a>. Once you have an account, you can generate an API access key from the &quot;API Keys&quot; tab. If you are using your own instance of CaaS, authentication is optional.</p>
+<p>To use the library with the official CaaS server, you will need to provide an API access key during initialization. You can request an account at <a href="https://caas-admin.techsoft3d.com">https://caas-admin.techsoft3d.com</a>. Once you have an account, you can generate an API access key from the &quot;API Keys&quot; tab. If you are using your own instance of CaaS, authentication is optional.</p>
 <p><strong>Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!</strong></p>
-<pre class="prettyprint source"><code>const caasClient = require('ts3d.hc.caas.api');
-caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
+<pre class="prettyprint source"><code>caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
 </code></pre>
 <h2>Example Usage</h2>
 <h3>Simple Conversion</h3>
-<p>In this example a file is uploaded to the CaaS server from the local file system, converted to SCS/SCZ and PNG with the default settings. The function <code>waitUntilConverted</code> is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished.</p>
+<p>In this example a file is uploaded to the CaaS server from the local file system and converted to SCS/SCZ and PNG with the default settings. The function <code>waitUntilConverted</code> is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished.</p>
 <pre class="prettyprint source"><code>let info = await caasClient.uploadModelFromFile(&quot;./testfiles/bnc.hsf&quot;);
 await caasClient.waitUntilConverted(info.itemid);
 await caasClient.getFileByType(info.itemid, &quot;scs&quot;, &quot;./output/&quot; + &quot;bnc.hsf.scs&quot;);
