@@ -2,7 +2,10 @@
 
 ## Overview
 
-This is the Node.js client-side API for the Communicator as a Service (CaaS) project. It is used to communicate with a CaaS Server Instance. You can use it to convert models to SC/SCZ files, generate images or generate STEP/PDF and other formats. You can either connect to your own instance of CaaS or to the official CaaS Server API available at [https://caas.techsoft3d.com](https://caas.techsoft3d.com).
+This is the Node.js library for the [Communicator as a Service (CaaS)](https://github.com/techsoft3d/hc-caas) project. It is used to simplify communication with a CaaS Server Instance. You can use it to convert and view CAD models, as well as generate images, STEP, PDF and other formats.  
+Using this library you can either connect to your own instance of CaaS or to the official CaaS Server API accessible at [https://caas.techsoft3d.com](https://caas.techsoft3d.com).
+
+For information on how to communicate with CaaS through HTTP requests, please see the [CaaS Github Project](https://github.com/techsoft3d/hc-caas)
 
 ## Installation
 
@@ -15,7 +18,7 @@ npm install hc-caas-api
 ```
 
 ### Client-Side
-Copy the caas.min.js file from the dist folder into your project.
+Copy the caas.min.js file from the dist folder into your project. **The client-side version of the library is only provided for development/testing use and should not be used in production.**
 
 
 
@@ -25,17 +28,16 @@ To initialize the library simply provide the URL of the CaaS server instance you
 
 To use the API with the official CaaS server, you will need to obtain an API key. You can request an account at [https://caas-admin.techsoft3d.com](https://caas-admin.techsoft3d.com). Once you have an account, you can generate an API key from the "API Keys" tab. You will need to provide this key when initializing this library. If you are using your own instance of CaaS, authentication is an optional feature.
 
-**Remember that your API key is secret and should not be shared with others or exposed in your client-side code in production!** 
-
+**Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!** 
 
 ```
- caasClient.init('https://caas.techsoft3d.com',{accessKey :"ENTER YOUR ACCESS KEY HERE"});   
+caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
 ```
 
 ## Example Usage
 
 ### Simple Conversion
-In this example a file is uploaded to the CaaS server from the file system, converted to SC/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is then downloaded to the file system after the conversion is complete. 
+In this example a file is uploaded to the CaaS server from the local file system, converted to SC/SCZ and PNG with the default settings. The function `waitUntilConverted` is used to wait until the conversion is complete. The SCS file is downloaded to the file system after the conversion has finished. 
 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
@@ -91,7 +93,7 @@ app.listen(3000);
 ```
 
 ### Custom Conversion Settings
-It is possible to override the default conversion settings of CaaS and instead provide your own command line. In this case, we are exporting a STEP file instead of generating SCS/SCZ/PNG files.
+It is possible to override the default conversion settings of CaaS and instead provide your own command line. In this case, we are exporting a STEP file instead of generating SCS/SCZ/PNG files. They are some limitations on what command line options are permitted for security reasons. In general, any output file generated will have an automatically assigned name based on the name of the uploaded model and the file extension of the output file. 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/axe.CATPART",null,{conversionCommandLine:["--output_step",""]});
 await caasClient.waitUntilConverted(info.itemid);
@@ -99,8 +101,8 @@ await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");
 ```
 
 
-### Adding Conversion Settings
-It is also possible to add additional command line options by specifying a `*` as the first commnand line argument. In this example we also pass in a custom XML settings file that will be used during conversion.
+### Appending Conversion Settings
+It is also possible to append additional command line options to the default command line CaaS command line options by specifying a `*` as the first commnand line argument. In this example we also pass in a custom XML settings file that will be generated during conversion in addition to the generated SCS/SCZ and PNG file.
 ```
 let info = await caasClient.uploadModelFromFiles(["./testfiles/axe.CATPART", "././testfiles/he_settings.xml"],"axe.CATPART", {conversionCommandLine:["*","--xml_settings","he_settings.xml"]});
 await caasClient.waitUntilConverted(info.data.itemid);
@@ -110,17 +112,17 @@ console.log(modelData);
 
 ### SCS Viewing via download token
 
-The simplest way to view a previous converted SCS file via CaaS is to use the `getDownloadToken` function. This function returns a unique, time-limited token that can be used to download the SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.
+The simplest way to view a previous converted CAD model file via CaaS in non-streaming mode is to use the `getDownloadToken` function. This function returns a unique, time-limited token that can be used to download the generated SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.
 
 ```
-// In production this call should be performed server-side
+// In production this call should be performed server-side and the result send to the client.
 let res = await caasClient.getDownloadToken("ID-OF-MODEL-TO-LOAD","scs");
 
 await hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), res.token);
 ```
 
 ### SCS Viewing with Buffer
-You can also access scs files and other files with a call to `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
+You can also access SCS files and other generated files with a call to `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
 
 Server:
 ```
@@ -151,7 +153,7 @@ if (!buffer.ERROR) {
 ```
 
 ### Streaming 
-To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer with. You don't have to initially pass any modelids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
+To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer in streaming mode. You don't have to initially pass any itemids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
 
 ```
 /// In production this call should be performed server-side and the result should be passed to the client
