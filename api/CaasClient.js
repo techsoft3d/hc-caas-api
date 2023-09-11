@@ -378,11 +378,13 @@ async function getStreamingSession(config = {}) {
  *
  * @param {string} streamingSessionId - The ID of the streaming session to enable stream access on.
  * @param {Array<string>} storageids - An array of storage IDs to enable stream access for.
+ * @param {Object} [config={}] - An optional object containing configuration options for the streaming session.
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function enableStreamAccess(streamingSessionId,storageids) {
-  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/enableStreamAccess/' + streamingSessionId,{ method: 'put',headers:{'CS-API-Arg': JSON.stringify(api_arg),'items':JSON.stringify(storageids)}});
+async function enableStreamAccess(streamingSessionId,storageids, api_args = {}) {
+  api_args.accessPassword = accessPassword;
+  api_args.accessKey = accessKey;
+  let res = await fetch(serveraddress + '/caas_api/enableStreamAccess/' + streamingSessionId,{ method: 'put',headers:{'CS-API-Arg': JSON.stringify(api_args),'items':JSON.stringify(storageids)}});
   return await res.json();
 };
 

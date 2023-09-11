@@ -1,6 +1,6 @@
 # CaaS API (hc-caas-api)
 
-## Version (0.7.44)
+## Version (0.7.45)
 * Initial Release
 * Requires CaaS version 0.11.91 or later
 
@@ -124,7 +124,7 @@ await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");
 
 
 ### Appending Conversion Settings
-It is also possible to append additional command line options to the default command line CaaS command line options by specifying a `*` as the first commnand line argument. In this example we also pass in a custom XML settings file that will be generated during conversion in addition to the generated SCS/SCZ and PNG file.
+It is also possible to append additional command line options to the default CaaS command line options by specifying a `*` as the first commnand line argument. In this example we specify a custom XML settings file that will be generated during conversion in addition to the default command line options.
 ```
 let info = await caasClient.uploadModelFromFiles(["./testfiles/axe.CATPART", "././testfiles/he_settings.xml"],"axe.CATPART", {conversionCommandLine:["*","--xml_settings","he_settings.xml"]});
 await caasClient.waitUntilConverted(info.data.itemid);
@@ -132,9 +132,9 @@ let modelData = await caasClient.getModelData(info.data.itemid);
 console.log(modelData);
 ```
 
-### SCS Viewing via download token
+### SCS Viewing via download tokens
 
-The simplest way to view a previous converted CAD model file via CaaS in non-streaming mode is to use the `getDownloadToken` function. This function returns a unique, time-limited token that can be used to download the generated SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.
+The simplest way to view a previous converted CAD model file via CaaS in non-streaming mode is to use the `getDownloadToken` function. This function returns a private, unique and time-limited token that can be used to download the generated SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.
 
 ```
 // In production this call should be performed server-side and the result send to the client.
@@ -193,7 +193,7 @@ if (!sessiondata.ERROR) {
 ```
 
 ### Adding additional models to a streaming session
-To add additional models to a streaming session you can use the `enableStreamAccess` function. This function takes an existing sessionid and an array of model ids.
+To add additional models to a running streaming session you can use the `enableStreamAccess` function. This function takes an existing sessionid and an array of model ids as input.
 
 ```
 // In production this call should be performed server-side

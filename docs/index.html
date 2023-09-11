@@ -44,7 +44,7 @@
 
     <section>
         <article><h1>CaaS API (hc-caas-api)</h1>
-<h2>Version (0.7.44)</h2>
+<h2>Version (0.7.45)</h2>
 <ul>
 <li>Initial Release</li>
 <li>Requires CaaS version 0.11.91 or later</li>
@@ -133,14 +133,14 @@ await caasClient.waitUntilConverted(info.itemid);
 await caasClient.getFileByType(info.itemid, &quot;step&quot;, &quot;./output/&quot; + &quot;axe.step&quot;);   
 </code></pre>
 <h3>Appending Conversion Settings</h3>
-<p>It is also possible to append additional command line options to the default command line CaaS command line options by specifying a <code>*</code> as the first commnand line argument. In this example we also pass in a custom XML settings file that will be generated during conversion in addition to the generated SCS/SCZ and PNG file.</p>
+<p>It is also possible to append additional command line options to the default CaaS command line options by specifying a <code>*</code> as the first commnand line argument. In this example we specify a custom XML settings file that will be generated during conversion in addition to the default command line options.</p>
 <pre class="prettyprint source"><code>let info = await caasClient.uploadModelFromFiles([&quot;./testfiles/axe.CATPART&quot;, &quot;././testfiles/he_settings.xml&quot;],&quot;axe.CATPART&quot;, {conversionCommandLine:[&quot;*&quot;,&quot;--xml_settings&quot;,&quot;he_settings.xml&quot;]});
 await caasClient.waitUntilConverted(info.data.itemid);
 let modelData = await caasClient.getModelData(info.data.itemid);
 console.log(modelData);
 </code></pre>
-<h3>SCS Viewing via download token</h3>
-<p>The simplest way to view a previous converted CAD model file via CaaS in non-streaming mode is to use the <code>getDownloadToken</code> function. This function returns a unique, time-limited token that can be used to download the generated SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.</p>
+<h3>SCS Viewing via download tokens</h3>
+<p>The simplest way to view a previous converted CAD model file via CaaS in non-streaming mode is to use the <code>getDownloadToken</code> function. This function returns a private, unique and time-limited token that can be used to download the generated SCS file directly from the backend-storage of the CaaS server. However, this functionality is only availabe if S3 or Azure Blob Storage is used as the backend storage or you are using the official CaaS server.</p>
 <pre class="prettyprint source"><code>// In production this call should be performed server-side and the result send to the client.
 let res = await caasClient.getDownloadToken(&quot;ID-OF-MODEL-TO-LOAD&quot;,&quot;scs&quot;);
 
@@ -186,7 +186,7 @@ if (!sessiondata.ERROR) {
 }
 </code></pre>
 <h3>Adding additional models to a streaming session</h3>
-<p>To add additional models to a streaming session you can use the <code>enableStreamAccess</code> function. This function takes an existing sessionid and an array of model ids.</p>
+<p>To add additional models to a running streaming session you can use the <code>enableStreamAccess</code> function. This function takes an existing sessionid and an array of model ids as input.</p>
 <pre class="prettyprint source"><code>// In production this call should be performed server-side
 let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);
 
