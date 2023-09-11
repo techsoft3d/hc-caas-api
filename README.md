@@ -29,7 +29,7 @@ Copy the caas.min.js file from the dist folder into your project. **The client-s
 
 To initialize the library simply provide the URL of the CaaS server instance you wish to connect to. 
 
-To use the API with the official CaaS server, you will need to obtain an API key. You can request an account at [https://caas-admin.techsoft3d.com](https://caas-admin.techsoft3d.com). Once you have an account, you can generate an API key from the "API Keys" tab. You will need to provide this key when initializing this library. If you are using your own instance of CaaS, authentication is an optional feature.
+To use the API with the official CaaS server, you will need to provide an API access key when initializing the library. You can request an account at [https://caas-admin.techsoft3d.com](https://caas-admin.techsoft3d.com). Once you have an account, you can generate an API access key from the "API Keys" tab. If you are using your own instance of CaaS, authentication is optional.
 
 **Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!** 
 

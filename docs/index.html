@@ -57,7 +57,7 @@ Using this library you can either connect to your own instance of CaaS or to the
 <p>Copy the caas.min.js file from the dist folder into your project. <strong>The client-side version of the library is only provided for development/testing use and should not be used in production.</strong></p>
 <h2>Initialization and Authentication</h2>
 <p>To initialize the library simply provide the URL of the CaaS server instance you wish to connect to.</p>
-<p>To use the API with the official CaaS server, you will need to obtain an API key. You can request an account at <a href="https://caas-admin.techsoft3d.com">https://caas-admin.techsoft3d.com</a>. Once you have an account, you can generate an API key from the &quot;API Keys&quot; tab. You will need to provide this key when initializing this library. If you are using your own instance of CaaS, authentication is an optional feature.</p>
+<p>To use the API with the official CaaS server, you will need to provide an API access key when initializing the library. You can request an account at <a href="https://caas-admin.techsoft3d.com">https://caas-admin.techsoft3d.com</a>. Once you have an account, you can generate an API access key from the &quot;API Keys&quot; tab. If you are using your own instance of CaaS, authentication is optional.</p>
 <p><strong>Remember that your API key is a secret and should not be shared with others or exposed in your client-side code in production!</strong></p>
 <pre class="prettyprint source"><code>const caasClient = require('ts3d.hc.caas.api');
 caasClient.init('https://caas.techsoft3d.com',{accessKey : process.env.CAAS_API_KEY});   
