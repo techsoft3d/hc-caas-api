@@ -17,9 +17,9 @@
 
         let hwv;
         window.onload = async () => {
-            caasClient.init('https://caas.techsoft3d.com',{accessKey:""});            
+            caasClient.init('https://caas.techsoft3d.com', { accessKey: "YOUR API ACCESS KEY" });
             let info= await caasClient.getInfo();
-            let sessiondata = await caasClient.getStreamingSession({accessItems:["cf41d235-76e3-4903-b6be-6fdc0a5176a5"]});
+            let sessiondata = await caasClient.getStreamingSession({accessItems:["ID-OF-ITEM-TO-STREAM"]});
             hwv = caasClient.initializeWebViewer(sessiondata, { containerId: "myContainer",model:"bnc.hsf"});
             hwv.start();           
         };       

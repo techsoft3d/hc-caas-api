@@ -22,6 +22,12 @@ For questions/feedback please send an email to guido@techsoft3d.com or post in o
 ## Documentation
 The online documentation for the CaaS API can be found [here](https://techsoft3d.github.io/hc-caas-api/).
 
+## Demos and Sample Code
+
+You can find various usage examples in the main folder of this project. In addition, two client-side examples can be found in the clientDemo folder. To run the client-side examples, simply use live server to serve the html files in the clientDemo folder. There is also a sandbox example you can find [here](https://3dsandbox.techsoft3d.com/?snippet=0VLo56yuurp84aApXQFKAn). 
+
+If you use the examples with the official CaaS API, you will need an API access key to run (see the "Initialization and Authentication" section below).
+
 ## Installation
 
 ### Server-Side
