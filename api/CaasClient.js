@@ -115,6 +115,10 @@ async function _uploadModel(formData, startpath = "", args = {}) {
  * @param {Blob} blob - The model file to upload.
  * @param {string} [startpath=""] - The starting path for the uploaded file (optional).
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
+ * @param {string} [args.conversionCommandLine=""] - The command line to use for model conversion (optional).
+ * @param {boolean} [args.skipConversion=false] - Whether to skip model conversion (optional).
+ * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
+
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function uploadModel(filename,blob, startpath = "", args = {}) {
@@ -157,6 +161,9 @@ async function uploadModels(filenames,blobs, startmodel = "", args = {}) {
  * @param {Blob} blob - The model file to upload.
  * @param {string} [startpath=""] - The starting path for the uploaded file (optional).
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
+ * @param {string} [args.conversionCommandLine=""] - The command line to use for model conversion (optional).
+ * @param {boolean} [args.skipConversion=false] - Whether to skip model conversion (optional).
+ * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function uploadModelFromFile(pathtofile, startpath = "", args = {}) {
@@ -237,12 +244,19 @@ async function getDownloadToken(storageid, type) {
   return await res.json();
 }
 
+
+
 /**
- * Retrieves a download token for the specified model from the CaaS server.
+ * Creates an empty model with the specified name on the CaaS server.
  *
- * @param {string} storageid - The ID of the model to retrieve a download token for.
- * @param {string} type - The type of the model to retrieve a download token for.
- * @returns {Promise<Object>} - A Promise that resolves to an object containing the download token for the specified model.
+ * @param {string} modelname - The name of the model to create.
+ * @param {Object} [config={}] - An optional object containing configuration options for the model creation.
+ * @param {string} [config.hcVersion] - The version of the HTML5 client to use for the model creation (optional).
+ * @param {string} [config.startPath] - The starting path to use for the model creation (optional).
+ * @param {boolean} [config.processShattered] - Whether to process shattered files for the model creation (optional).
+ * @param {string} [config.conversionCommandLine] - The conversion command line to use for the model creation (optional).
+ * @param {boolean} [config.skipConversion] - Whether to skip the conversion process for the model creation (optional).
+ * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function createEmptyModel(modelname, config= {}) {
   let api_arg = { hcVersion: config.hcVersion, itemname: modelname, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey,
@@ -253,12 +267,20 @@ async function createEmptyModel(modelname, config= {}) {
 }
 
 
+
 /**
- * Retrieves a download token for the specified model from the CaaS server.
+ * Initiates a re-conversion of the specified model on the CaaS server.
  *
- * @param {string} storageid - The ID of the model to retrieve a download token for.
- * @param {string} type - The type of the model to retrieve a download token for.
- * @returns {Promise<Object>} - A Promise that resolves to an object containing the download token for the specified model.
+ * @param {string} storageid - The storage ID of the model to re-convert.
+ * @param {Object} [config={}] - An optional object containing configuration options for the re-conversion.
+ * @param {string} [config.hcVersion] - The version of the HTML5 client to use for the re-conversion (optional).
+ * @param {string} [config.startPath] - The starting path to use for the re-conversion (optional).
+ * @param {boolean} [config.multiConvert] - Whether to enable multi-conversion for the re-conversion (optional).
+ * @param {string} [config.conversionCommandLine] - The conversion command line to use for the re-conversion (optional).
+ * @param {boolean} [config.processShattered] - Whether to process shattered files for the re-conversion (optional).
+ * @param {boolean} [config.overrideItem] - Whether to override the existing item with the re-converted item (optional).
+ * @param {boolean} [config.waitUntilConversionDone] - Whether to wait until the re-conversion is done before returning (optional).
+ * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
 async function reconvertModel(storageid, config = {}) {
 
