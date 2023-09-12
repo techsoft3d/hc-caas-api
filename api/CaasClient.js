@@ -51,14 +51,14 @@ function setAccessKey(accessKey_in) {
 /**
  * Waits until the specified model has finished converting before resolving the Promise.
  *
- * @param {string} storageid - The ID of the model to wait for.
+ * @param {string} itemid - The ID of the model to wait for.
  * @param {number} [interval=1000] - The interval at which to check the model's conversion state (in milliseconds).
  * @returns {Promise<string>} - A Promise that resolves to the model's conversion state when it has finished converting.
  */
-async function waitUntilConverted(storageid, interval = 1000) {
+async function waitUntilConverted(itemid, interval = 1000) {
   return new Promise(async (resolve, reject) => {
     let checkInterval = setInterval(async () => {
-      let info = await getModelData(storageid);
+      let info = await getModelData(itemid);
       if (info.conversionState != "PENDING") {
         clearInterval(checkInterval);
         resolve(info.conversionState);
@@ -207,11 +207,11 @@ async function uploadModelFromFiles(pathtofiles, startmodel = "",args ={}) {
  * @param {number} size - The size of the model file (in bytes).
  * @param {Object} [args={}] - Additional arguments to pass to the CaaS API (optional).
  * @param {string} [args.hcVersion=""] - The version of HOOPS Communicator to use for model conversion (optional).
- * @param {string} [args.storageid=""] - The ID of the storage to upload the model to (optional).
+ * @param {string} [args.storageID=""] - The ID of the item to upload the model to (optional).
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the upload token for the specified model.
  */
 async function getUploadToken(modelname, size, args = {}) {
-  let api_arg = { hcVersion: args.hcVersion, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageid: args.storageid};
+  let api_arg = { hcVersion: args.hcVersion, webhook: webhook, accessPassword:accessPassword, accessKey:accessKey, storageID: args.storageID};
 
   let res;
   try {
@@ -425,17 +425,17 @@ async function getModels() {
 /**
  * Retrieves model data for the specified storage IDs from the CaaS server.
  *
- * @param {string|Array<string>} storageids - The storage ID or array of storage IDs to retrieve model data for.
+ * @param {string|Array<string>} itemids - The item ID or array of item IDs to retrieve model data for.
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the model data for the specified storage IDs.
  */
-async function getModelData(storageids) {
+async function getModelData(itemids) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
 
   if (storageids instanceof Array) {
-    api_arg.itemids = storageids;            
+    api_arg.itemids = itemids;            
   }
   try {
-    let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.itemids ? "" : storageids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+    let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.itemids ? "" : itemids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
     return await res.json();
   } catch (ERROR) {
     return { ERROR: "Conversion Service can't be reached" };
