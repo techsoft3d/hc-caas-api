@@ -4,8 +4,8 @@ const caasClient = require('./api/CaasClient');
 
     let pendingModels = [];
     caasClient.init('http://localhost:3001');
-    pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/bnc.hsf")).itemid);
-    pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/axe.CATPART")).itemid);
+    pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/bnc.hsf")).storageID);
+    pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/axe.CATPART")).storageID);
 
     let intervalid = setInterval(async () => {
         if (!pendingModels.length) {

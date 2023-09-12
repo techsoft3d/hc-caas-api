@@ -64,16 +64,16 @@ In this example a file is uploaded to the CaaS server from the local file system
 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/bnc.hsf");
-await caasClient.waitUntilConverted(info.itemid);
-await caasClient.getFileByType(info.itemid, "scs", "./output/" + "bnc.hsf.scs");
+await caasClient.waitUntilConverted(info.storageID);
+await caasClient.getFileByType(info.storageID, "scs", "./output/" + "bnc.hsf.scs");
 ```
 
 ### Conversion with custom polling
 In this slightly more elaborate example two files are uploaded to CaaS for conversion and a custom polling mechanism is used to check for completed conversions
 ```
 let pendingModels = [];
-pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/bnc.hsf")).itemid);
-pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/axe.CATPART")).itemid);
+pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/bnc.hsf")).storageID);
+pendingModels.push((await caasClient.uploadModelFromFile("./testfiles/axe.CATPART")).storageID);
 
 let intervalid = setInterval(async () => {
     if (!pendingModels.length) {
@@ -118,8 +118,8 @@ app.listen(3000);
 It is possible to override the default conversion settings of CaaS and instead provide your own command line. In this case, we are exporting a STEP file instead of generating SCS/SCZ/PNG files. They are some limitations on what command line options are permitted for security reasons. In general, any output file generated will have an automatically assigned name based on the name of the uploaded model and the file extension of the output file. 
 ```
 let info = await caasClient.uploadModelFromFile("./testfiles/axe.CATPART",null,{conversionCommandLine:["--output_step",""]});
-await caasClient.waitUntilConverted(info.itemid);
-await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");   
+await caasClient.waitUntilConverted(info.storageID);
+await caasClient.getFileByType(info.storageID, "step", "./output/" + "axe.step");   
 ```
 
 
@@ -127,8 +127,8 @@ await caasClient.getFileByType(info.itemid, "step", "./output/" + "axe.step");
 It is also possible to append additional command line options to the default CaaS command line options by specifying a `*` as the first commnand line argument. In this example we specify a custom XML settings file that will be generated during conversion in addition to the default command line options.
 ```
 let info = await caasClient.uploadModelFromFiles(["./testfiles/axe.CATPART", "././testfiles/he_settings.xml"],"axe.CATPART", {conversionCommandLine:["*","--xml_settings","he_settings.xml"]});
-await caasClient.waitUntilConverted(info.data.itemid);
-let modelData = await caasClient.getModelData(info.data.itemid);
+await caasClient.waitUntilConverted(info.data.storageID);
+let modelData = await caasClient.getModelData(info.data.storageID);
 console.log(modelData);
 ```
 
@@ -144,7 +144,7 @@ await hwv.model.loadSubtreeFromScsFile(hwv.model.getRootNode(), res.token);
 ```
 
 ### SCS Viewing with Buffer
-You can also access SCS files and other generated files with a call to `getFileByType` with the itemid of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
+You can also access SCS files and other generated files with a call to `getFileByType` with the storageID of the model. In production you would do this in your server application. This buffer can then be send to the webviewer client. In this example we are using express to serve the buffer to the client.
 
 Server:
 ```
@@ -175,7 +175,7 @@ if (!buffer.ERROR) {
 ```
 
 ### Streaming 
-To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer in streaming mode. You don't have to initially pass any itemids to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
+To utilize the streaming functionality of HOOPS Communicator via CaaS you need to request a streaming session and make one or more models accessible for streaming. The session data object returned can then be used to start the webviewer in streaming mode. You don't have to initially pass any storageIDs to the `getStreamingSession` function. In that case specify "_empty" for the model to load. In a typical application the actual name of the model will be stored as part of your business logic alongside its id when the model was originally converted though you can retrieve all the relevant data of a model with the `getModelData` function.
 
 ```
 /// In production this call should be performed server-side and the result should be passed to the client
@@ -197,7 +197,7 @@ To add additional models to a running streaming session you can use the `enableS
 
 ```
 // In production this call should be performed server-side
-let saresult = await caasClient.enableStreamAccess(sessionid,[itemid1,itemid2]);
+let saresult = await caasClient.enableStreamAccess(sessionid,[storageID1,storageID2]);
 
 hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),"model1");
 ```

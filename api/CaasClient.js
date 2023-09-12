@@ -51,14 +51,14 @@ function setAccessKey(accessKey_in) {
 /**
  * Waits until the specified model has finished converting before resolving the Promise.
  *
- * @param {string} itemid - The ID of the model to wait for.
+ * @param {string} storageID - The ID of the model to wait for.
  * @param {number} [interval=1000] - The interval at which to check the model's conversion state (in milliseconds).
  * @returns {Promise<string>} - A Promise that resolves to the model's conversion state when it has finished converting.
  */
-async function waitUntilConverted(itemid, interval = 1000) {
+async function waitUntilConverted(storageID, interval = 1000) {
   return new Promise(async (resolve, reject) => {
     let checkInterval = setInterval(async () => {
-      let info = await getModelData(itemid);
+      let info = await getModelData(storageID);
       if (info.conversionState != "PENDING") {
         clearInterval(checkInterval);
         resolve(info.conversionState);
@@ -227,16 +227,16 @@ async function getUploadToken(modelname, size, args = {}) {
 /**
  * Retrieves a download token for the specified model from the CaaS server.
  *
- * @param {string} storageid - The ID of the model to retrieve a download token for.
+ * @param {string} storageID - The ID of the model to retrieve a download token for.
  * @param {string} type - The type of the model to retrieve a download token for.
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the download token for the specified model.
  */
-async function getDownloadToken(storageid, type) {
+async function getDownloadToken(storageID, type) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
 
   let res;
   try {
-    res = await fetch(serveraddress + '/caas_api/downloadToken' + "/" + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+    res = await fetch(serveraddress + '/caas_api/downloadToken' + "/" + storageID + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   } catch (ERROR) {
     console.log(ERROR);
     return { ERROR: "Conversion Service can't be reached" };
@@ -271,7 +271,7 @@ async function createEmptyModel(modelname, config= {}) {
 /**
  * Initiates a re-conversion of the specified model on the CaaS server.
  *
- * @param {string} storageid - The storage ID of the model to re-convert.
+ * @param {string} storageID - The storage ID of the model to re-convert.
  * @param {Object} [config={}] - An optional object containing configuration options for the re-conversion.
  * @param {string} [config.hcVersion] - The version of the HTML5 client to use for the re-conversion (optional).
  * @param {string} [config.startPath] - The starting path to use for the re-conversion (optional).
@@ -282,42 +282,42 @@ async function createEmptyModel(modelname, config= {}) {
  * @param {boolean} [config.waitUntilConversionDone] - Whether to wait until the re-conversion is done before returning (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function reconvertModel(storageid, config = {}) {
+async function reconvertModel(storageID, config = {}) {
 
   let api_arg = { hcVersion: config.hcVersion, accessPassword:accessPassword, accessKey:accessKey,
     startPath:config.startPath, multiConvert:config.multiConvert, conversionCommandLine:config.conversionCommandLine, processShattered:config.processShattered,
      overrideItem:config.overrideItem, waitUntilConversionDone: config.waitUntilConversionDone};
 
-  let res = await fetch(serveraddress + '/caas_api/reconvert/' + storageid, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  let res = await fetch(serveraddress + '/caas_api/reconvert/' + storageID, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
 
 /**
  * Creates a custom image with the specified storage ID on the CaaS server.
  *
- * @param {string} storageid - The storage ID of the model to create a custom image for.
+ * @param {string} storageID - The storage ID of the model to create a custom image for.
  * @param {Object} [config_in={}] - Additional configuration options for the custom image creation (optional).
  * @param {string} [config_in.customImageCode=""] - The custom image code to use for the model (optional).
  * @param {string} [config_in.conversionCommandLine=""] - The command line to use for model conversion (optional).
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function createCustomImage(storageid, config = {}) {
+async function createCustomImage(storageID, config = {}) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey, customImageCode: config.customImageCode,conversionCommandLine : config.conversionCommandLine};
-  let res = await fetch(serveraddress + '/caas_api/customImage/' + storageid, { method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  let res = await fetch(serveraddress + '/caas_api/customImage/' + storageID, { method: 'put', headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   return await res.json();
 }
 
 /**
  * Retrieves a file of the specified type for the specified model from the CaaS server.
  *
- * @param {string} storageid - The ID of the model to retrieve a file for.
+ * @param {string} storageID - The ID of the model to retrieve a file for.
  * @param {string} type - The type of file to retrieve (e.g. "fbx", "usd", "glb", etc.).
  * @param {string} [outputPath=null] - The path to save the retrieved file to (optional).
  * @returns {Promise<ArrayBuffer>|Promise<Object>} - A Promise that resolves to an ArrayBuffer containing the retrieved file, or an object containing an error message if the file is not found.
  */
-async function getFileByType(storageid, type, outputPath = null) {
+async function getFileByType(storageID, type, outputPath = null) {
   let api_arg = { accessPassword: accessPassword, accessKey:accessKey };
-  let res = await fetch(serveraddress + '/caas_api/file/' + storageid + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  let res = await fetch(serveraddress + '/caas_api/file/' + storageID + "/" + type, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   if (res.status == 404) {
     return { ERROR: "File not found" };
   }
@@ -338,14 +338,14 @@ async function getFileByType(storageid, type, outputPath = null) {
 /**
  * Retrieves a file with the specified name for the specified model from the CaaS server.
  *
- * @param {string} storageid - The ID of the model to retrieve a file for.
+ * @param {string} storageID - The ID of the model to retrieve a file for.
  * @param {string} name - The name of the file to retrieve.
  * @param {string} [outputPath=null] - The path to save the retrieved file to (optional).
  * @returns {Promise<ArrayBuffer>|Promise<Object>} - A Promise that resolves to an ArrayBuffer containing the retrieved file, or an object containing an error message if the file is not found.
  */
-async function getFileByName(storageid, name, outputPath = null) {
+async function getFileByName(storageID, name, outputPath = null) {
   let api_arg = { accessPassword: accessPassword, accessKey:accessKey };
-  let res = await fetch(serveraddress + '/caas_api/fileByName/' + storageid + "/" + name, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
+  let res = await fetch(serveraddress + '/caas_api/fileByName/' + storageID + "/" + name, { headers: { 'CS-API-Arg': JSON.stringify(api_arg) } });
   if (res.status == 404) {
     return { ERROR: "File not found" };
   }
@@ -366,12 +366,12 @@ async function getFileByName(storageid, name, outputPath = null) {
 /**
  * Deletes the model with the specified storage ID from the CaaS server.
  *
- * @param {string} storageid - The storage ID of the model to delete.
+ * @param {string} storageID - The storage ID of the model to delete.
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function deleteModel(storageid) {
+async function deleteModel(storageID) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
-  let res = await fetch(serveraddress + '/caas_api/delete/' + storageid, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) }});
+  let res = await fetch(serveraddress + '/caas_api/delete/' + storageID, { method: 'put',headers: { 'CS-API-Arg': JSON.stringify(api_arg) }});
   return await res.json();
 }
 
@@ -399,14 +399,14 @@ async function getStreamingSession(config = {}) {
  * Enables stream access for the specified storage IDs on the specified streaming session.
  *
  * @param {string} streamingSessionId - The ID of the streaming session to enable stream access on.
- * @param {Array<string>} storageids - An array of storage IDs to enable stream access for.
+ * @param {Array<string>} storageIDs - An array of storage IDs to enable stream access for.
  * @param {Object} [config={}] - An optional object containing configuration options for the streaming session.
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function enableStreamAccess(streamingSessionId,storageids, api_args = {}) {
+async function enableStreamAccess(streamingSessionId,storageIDs, api_args = {}) {
   api_args.accessPassword = accessPassword;
   api_args.accessKey = accessKey;
-  let res = await fetch(serveraddress + '/caas_api/enableStreamAccess/' + streamingSessionId,{ method: 'put',headers:{'CS-API-Arg': JSON.stringify(api_args),'items':JSON.stringify(storageids)}});
+  let res = await fetch(serveraddress + '/caas_api/enableStreamAccess/' + streamingSessionId,{ method: 'put',headers:{'CS-API-Arg': JSON.stringify(api_args),'items':JSON.stringify(storageIDs)}});
   return await res.json();
 };
 
@@ -425,17 +425,17 @@ async function getModels() {
 /**
  * Retrieves model data for the specified storage IDs from the CaaS server.
  *
- * @param {string|Array<string>} itemids - The item ID or array of item IDs to retrieve model data for.
+ * @param {string|Array<string>} storageIDs - The item ID or array of item IDs to retrieve model data for.
  * @returns {Promise<Object>} - A Promise that resolves to an object containing the model data for the specified storage IDs.
  */
-async function getModelData(itemids) {
+async function getModelData(storageIDs) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
 
-  if (storageids instanceof Array) {
-    api_arg.itemids = itemids;            
+  if (storageIDs instanceof Array) {
+    api_arg.storageIDs = storageIDs;            
   }
   try {
-    let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.itemids ? "" : itemids),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
+    let res = await fetch(serveraddress + '/caas_api/data' +  "/" + (api_arg.storageIDs ? "" : storageIDs),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});
     return await res.json();
   } catch (ERROR) {
     return { ERROR: "Conversion Service can't be reached" };
@@ -771,23 +771,23 @@ async function getFiles(orgid,ownerEmail, ownerPassword) {
 }
 
 
-async function getDataAuth(itemid, orgid,ownerEmail, ownerPassword) {
+async function getDataAuth(storageID, orgid,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/accounts/getDataAuth' + "/" + itemid + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getDataAuth' + "/" + storageID + "/" + orgid,{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
-async function deleteAuth(orgid,itemid,ownerEmail, ownerPassword) {
+async function deleteAuth(orgid,storageID,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/accounts/deleteAuth' + "/" + orgid + "/" + itemid,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/deleteAuth' + "/" + orgid + "/" + storageID,{method: 'PUT',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
 
 
-async function getItemFromType(orgid,itemid,type,ownerEmail, ownerPassword) {
+async function getItemFromType(orgid,storageID,type,ownerEmail, ownerPassword) {
   let api_arg = {accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
-  let res = await fetch(serveraddress + '/caas_api/accounts/getItemFromType' + "/" + orgid + "/" + itemid + (type ? ("/" + type) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  let res = await fetch(serveraddress + '/caas_api/accounts/getItemFromType' + "/" + orgid + "/" + storageID + (type ? ("/" + type) : ""),{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   if (res.status == 404) {
     return { ERROR: "File not found" };
   }

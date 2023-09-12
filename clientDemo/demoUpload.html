@@ -32,9 +32,9 @@
                     $("#status").text("Uploading");
                     let result = await caasClient.uploadModelFromFileInput(files[0]);
                     $("#status").text("Converting");
-                    await caasClient.waitUntilConverted(result.itemid);
+                    await caasClient.waitUntilConverted(result.storageID);
                     $("#status").text("accessing");
-                    let saresult = await caasClient.enableStreamAccess(sessionid,[result.itemid]);
+                    let saresult = await caasClient.enableStreamAccess(sessionid,[result.storageID]);
                     await hwv.model.clear();
                      hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),result.inputfilename);
                      $("#status").text("Streaming");
