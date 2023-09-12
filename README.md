@@ -1,8 +1,8 @@
 # CaaS API (hc-caas-api)
 
-## Version (0.7.45)
+## Version (0.7.47)
 * Initial Release
-* Requires CaaS version 0.11.91 or later
+* Requires CaaS version 0.11.93 or later
 
 ## Overview
 
