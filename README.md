@@ -30,6 +30,11 @@ If you use the examples with the official CaaS API, you will need an API access 
 
 ## Installation
 
+### GitHub
+To accesss the library from GitHub and run the samples, simply clone the repository.
+
+https://github.com/techsoft3d/hc-caas-api
+
 ### Server-Side
 To install the library for use in your node project, simply run the following command in your project folder:
 
