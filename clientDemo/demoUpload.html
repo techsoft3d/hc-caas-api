@@ -36,8 +36,8 @@
                     $("#status").text("accessing");
                     let saresult = await caasClient.enableStreamAccess(sessionid,[result.storageID]);
                     await hwv.model.clear();
-                     hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),result.inputfilename);
-                     $("#status").text("Streaming");
+                    $("#status").text("Streaming");
+                    hwv.model.loadSubtreeFromModel(hwv.model.getRootNode(),result.inputfilename);
                 }
             });
 
