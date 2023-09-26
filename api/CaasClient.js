@@ -480,6 +480,17 @@ async function getStatus(json) {
   return await res.json();
 }
 
+/**
+ * Executes a custom callback on the CaaS server with the specified callback data. Only for trusted clients with accessPassword set.
+ *
+ * @param {Object} callbackData - The data to use for the custom callback.
+ * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
+ */
+async function executeCustomCallback(callbackData) {
+  let api_arg = { callbackData: callbackData, accessPassword:accessPassword, accessKey:accessKey};
+  let res = await fetch(serveraddress + '/caas_api/customCallback',{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -819,6 +830,7 @@ module.exports = {
   getModels,
   getModelData,
   getStatus,
+  executeCustomCallback,
   generateAPIKey,
   addUser,
   checkPassword,
