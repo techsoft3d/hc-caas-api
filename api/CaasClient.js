@@ -484,10 +484,11 @@ async function getStatus(json) {
  * Executes a custom callback on the CaaS server with the specified callback data. Only for trusted clients with accessPassword set.
  *
  * @param {Object} callbackData - The data to use for the custom callback.
+ * @param {boolean} [sendToAll=false] - Whethever to execute the callback for all caas instances.
  * @returns {Promise<Object>} - A Promise that resolves to the response from the CaaS API.
  */
-async function executeCustomCallback(callbackData) {
-  let api_arg = { callbackData: callbackData, accessPassword:accessPassword, accessKey:accessKey};
+async function executeCustomCallback(callbackData, sendToAll = false) {
+  let api_arg = { callbackData: callbackData, sendToAll:sendToAll, accessPassword:accessPassword, accessKey:accessKey};
   let res = await fetch(serveraddress + '/caas_api/customCallback',{method: 'put',headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
   return await res.json();
 }
