@@ -725,9 +725,9 @@ async function invalidateAPIKey(key, ownerEmail, ownerPassword) {
 }
 
 
-async function editAPIKey(key,name, ownerEmail, ownerPassword) {
+async function editAPIKey(key,name, readonly,ownerEmail, ownerPassword) {
 
-  let api_arg = { name: name,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
+  let api_arg = { name: name,readonly: readonly,accessPassword:accessPassword, accessKey:accessKey,email:ownerEmail, password:ownerPassword};
 
   let res = await fetch(serveraddress + '/caas_api/accounts/editAPIKey' + "/" + key, {  mode:'cors', method: 'PUT',
       headers: {
