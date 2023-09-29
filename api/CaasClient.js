@@ -494,8 +494,13 @@ async function executeCustomCallback(callbackData, sendToAll = false) {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+async function getHCVersion() {
+  let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
+  let res = await fetch(serveraddress + '/caas_api/hcVersion',{headers: {'CS-API-Arg': JSON.stringify(api_arg)}});   
+  return await res.json();
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function checkPassword(email,password) {
   let api_arg = { accessPassword:accessPassword, accessKey:accessKey};
@@ -864,5 +869,6 @@ module.exports = {
   updateOrgMaxStorage,
   resetPassword,
   getDataAuth,
-  uploadModels
+  uploadModels,
+  getHCVersion
 };

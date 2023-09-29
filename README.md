@@ -1,5 +1,11 @@
 # CaaS API (hc-caas-api)
 
+
+## Version (0.7.56)
+* Custom Callback API added
+* Various minor updates
+* Requires CaaS version 0.11.110 or later
+
 ## Version (0.7.49)
 * Initial Release
 * Requires CaaS version 0.11.93 or later
